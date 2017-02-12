@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using VScript_Core;
 
+using VScript_Core.System;
+
 namespace VScript_Testing
 {
 	class Program
@@ -12,7 +14,9 @@ namespace VScript_Testing
 		static void Main(string[] args)
 		{
 			Logger.Log("Hello World");
-			Console.ReadLine();
+			SystemConsole.StartProcess("C:/Python34/python.exe", SystemConsole.GetWorkingDirectory() + "/Intermediate/print_test.py");
+			Logger.Log("Done");
+            Console.ReadLine();
 		}
 	}
 }
