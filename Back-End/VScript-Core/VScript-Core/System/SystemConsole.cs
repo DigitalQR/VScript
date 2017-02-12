@@ -17,19 +17,27 @@ namespace VScript_Core.System
 		*/
 		public static String GetWorkingDirectory()
 		{
-#if DEBUG
+		#if DEBUG
+			//Use project root directory, if building for debug
 			return Directory.GetCurrentDirectory() + "\\..\\..";
-#else
+		#else
 			return Directory.GetCurrentDirectory();
-#endif
+		#endif
 		}
+
+		public delegate void InputFunction(StreamWriter writer);
 
 		/**
 			Starts the given process and links it's output to logger
 			-TODO: Setup input handle
+
+			@param	exe_name		Name of the desired executable to run
+			@param	args			Desired command line arguments to launch using	
+			@param	input_function	Function to used to pass input to process, if required
 		*/
-		public static Process StartProcess(String exe_name, String args)
+		public static Process StartProcess(String exe_name, String args = "", InputFunction input_function = null)
 		{
+			//Setup process with desired (minimized settings)
 			Process process = new Process();
 			process.StartInfo.FileName = exe_name;
 			process.StartInfo.WorkingDirectory = GetWorkingDirectory();
@@ -39,28 +47,54 @@ namespace VScript_Core.System
 			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.RedirectStandardOutput = true;
 			process.StartInfo.RedirectStandardError = true;
-			
+			if(input_function != null)
+				process.StartInfo.RedirectStandardInput = true;
+
+
+			//Register output
+			process.OutputDataReceived += (sender, arg) => 
+			{
+				if(arg != null && arg.Data != null)
+					Logger.Log(arg.Data.ToString());
+			};
+
+			//Register error output
+			process.ErrorDataReceived += (sender, arg) => 
+			{
+				if (arg == null || arg.Data == null)
+					return;
+                String error = arg.Data.ToString();
+
+				if (error != null && error.Length != 0)
+				{
+					Logger.LogError("Process error for: '" + exe_name + "'");
+					Logger.LogError("\t-args: " + args);
+					Logger.LogError("\t-dir: " + GetWorkingDirectory());
+					Logger.LogError("Output: ");
+					Logger.LogError(error);
+				}
+			};
+
+
 			try
 			{
+				//Start process and asynchronous reading
 				process.Start();
-
-				using (StreamReader reader = process.StandardOutput)
-					Logger.Log(reader.ReadLine());
-
-
-				using (StreamReader reader = process.StandardError)
+				process.BeginOutputReadLine();
+				process.BeginErrorReadLine();
+				
+				//Link input, if avaliable
+				if (true)
 				{
-					String error = reader.ReadLine();
-
-					if (error != null && error.Length != 0)
+					using (StreamWriter writer = process.StandardInput)
 					{
-						Logger.LogError("Process error for: '" + exe_name + "'");
-						Logger.LogError("\t-args: " + args);
-						Logger.LogError("\t-dir: " + GetWorkingDirectory());
-						Logger.LogError("Output: ");
-						Logger.LogError(error);
+						while (!process.HasExited)
+						{
+							input_function(writer);
+						}
 					}
 				}
+
 			}
 			catch (Win32Exception exception)
 			{

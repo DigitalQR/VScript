@@ -14,7 +14,8 @@ namespace VScript_Testing
 		static void Main(string[] args)
 		{
 			Logger.Log("Hello World");
-			SystemConsole.StartProcess("C:/Python34/python.exe", SystemConsole.GetWorkingDirectory() + "/Intermediate/print_test.py");
+			PythonProgram test_python = new PythonProgram("/Intermediate/print_test.py");
+			test_python.Run("");
 			Logger.Log("Done");
             Console.ReadLine();
 		}
