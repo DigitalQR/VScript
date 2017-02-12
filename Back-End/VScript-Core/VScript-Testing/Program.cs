@@ -11,7 +11,7 @@ namespace VScript_Testing
 	{
 		static void Main(string[] args)
 		{
-			Console.WriteLine("Hello World");
+			Logger.Log("Hello World");
 			Console.ReadLine();
 		}
 	}
