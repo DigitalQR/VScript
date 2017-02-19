@@ -165,7 +165,47 @@ namespace VScript_Core.Graph.Json
 			}
 
 			return value_list;
-        }
+		}
+
+		/**
+		Returns all elements of given type
+		*/
+		public List<JsonObject> GetObjects()
+		{
+			List<JsonObject> value_list = new List<JsonObject>();
+
+			foreach (JsonValue pair in values)
+			{
+				try
+				{
+					JsonObject type_pair = (JsonObject)pair;
+
+					if (type_pair != null)
+						value_list.Add(type_pair);
+				}
+				catch (InvalidCastException)
+				{
+				}
+			}
+
+			return value_list;
+		}
+
+		/**
+		Add raw JsonValue object
+		*/
+		public void AddRaw(JsonValue value)
+		{
+			values.Add(value);
+		}
+
+		/**
+		Generic added for value
+		*/
+		public void Add<Type>(Type value)
+		{
+			values.Add(new JsonValue<Type>(value));
+		}
 
 		/**
 		Encode current object in json format

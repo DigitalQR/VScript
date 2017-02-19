@@ -309,5 +309,40 @@ namespace VScript_Core.Graph.Json
 
 			PutRaw(key, array);
 		}
+
+		/**
+		Generic getter for array of key/values
+		*/
+		public List<JsonObject> GetObjectList(string key)
+		{
+			JsonValue raw_value = GetRaw(key);
+
+			try
+			{
+				JsonArray array = (JsonArray)raw_value;
+
+				if (array != null)
+					return array.GetObjects();
+				else
+					return new List<JsonObject>();
+			}
+			catch (InvalidCastException)
+			{
+				return new List<JsonObject>();
+			}
+		}
+
+		/**
+		Generic setter for array of key/values
+		*/
+		public void PutObjectList(string key, List<JsonObject> values)
+		{
+			JsonArray array = new JsonArray();
+
+			foreach (JsonObject json in values)
+				array.AddRaw(json);
+
+			PutRaw(key, array);
+		}
 	}
 }

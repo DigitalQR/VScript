@@ -16,29 +16,15 @@ namespace VScript_Testing
 		static void Main(string[] args)
 		{
 			Logger.Log("Hello World");
-			
-			/*
-			JsonObject another_json = new JsonObject();
-			another_json.Put("yes", true);
 
-			JsonObject json = new JsonObject();
-			json.Put("test", 2);
-			json.Put("a", 3);
-			json.Put("b", "awe");
-			json.PutList("test", new List<string>{ "a", "we", "awewa"});
+			Graph graph = new Graph("Test");
+			graph.Import();
+			//graph.root_node.forwards_conn.Add(new NodeMeta(3453, 23));
+			//graph.root_node.forwards_conn.Add(new NodeMeta(3453, 33));
+			//graph.root_node.backwards_conn.Add(new NodeMeta(3453, 13));
+			//graph.Export();
 
-			another_json.Put("json", json);
-            Logger.Log(another_json.ToString());
-			*/
-
-			JsonObject json = new JsonObject("{\"test\":30,\"a\":{\"force\":true},\"arr\":[0,1,2,\"apple\"],\"b\":\"apple\"}");
-			Logger.Log(json.ToString());
-			Logger.Log(json.Get<int>("test").ToString());
-			Logger.Log("force: "+ json.GetObject("a").Get<bool>("force"));
-
-			foreach(int i in json.GetList<int>("arr"))
-				Logger.Log("" + i);
-
+			Logger.Log(graph.ToString());
 
 			Logger.Log("Done");
 			Console.ReadLine();
