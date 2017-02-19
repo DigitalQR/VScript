@@ -40,6 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graph\Graph.cs" />
+    <Compile Include="Graph\Json\JsonArray.cs" />
+    <Compile Include="Graph\Json\JsonObject.cs" />
+    <Compile Include="Graph\Json\JsonValue.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PythonProgram.cs" />
