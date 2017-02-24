@@ -26,6 +26,11 @@ namespace VScript_Testing
 
 			Logger.Log(graph.ToString());
 
+			Module module = new Module("Test");
+			module.Export();
+			Logger.Log(module.ToString());
+
+
 			Logger.Log("Done");
 			Console.ReadLine();
 		}

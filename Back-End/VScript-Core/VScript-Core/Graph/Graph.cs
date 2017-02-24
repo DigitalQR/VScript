@@ -74,6 +74,7 @@ namespace VScript_Core.Graph
 
 	public class Graph
 	{
+		private static string extention = ".graph.json";
 		public string name { get; private set; }
 		public NodeMeta root_node { get; private set; }
 
@@ -85,19 +86,19 @@ namespace VScript_Core.Graph
 
 		public void Export()
 		{
-			File.WriteAllText(name + ".json", root_node.ToString());
+			File.WriteAllText(name + extention, root_node.ToString());
 		}
 
 		public void Import()
 		{
 			try
 			{
-				string raw_json = File.ReadAllText(name + ".json");
+				string raw_json = File.ReadAllText(name + extention);
 				root_node.ParseFromJson(new JsonObject(raw_json));
 			}
 			catch (FileNotFoundException)
 			{
-				Logger.LogError("Unable to import '" + name + ".json'");
+				Logger.LogError("Unable to import '" + name + extention + "'");
 			}
 			
 		}
