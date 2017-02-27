@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Point : MonoBehaviour {
+public class TestScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -11,9 +11,16 @@ public class Point : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetMouseButtonDown(0))
-            Game
 
+    }
 
+    void OnMouseDown()
+    {
+        Debug.Log("Down");
+    }
+
+    void OnMouseUp()
+    {
+        Debug.Log("Up");
     }
 }
