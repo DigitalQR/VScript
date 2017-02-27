@@ -14,15 +14,17 @@ namespace VScript_Core.Graph
 		private static string extention = ".module.json";
 		public string name;
 		public int id;
+        public string lang;
 
 		//Stores required file names
 		public List<string> module_dep;
 		public List<string> file_dep;
 		public List<string> nodes;
 
-		public Module(string name)
+		public Module(string name, string lang = "null")
 		{
 			this.name = name;
+            this.lang = lang;
 			module_dep = new List<string>();
 			file_dep = new List<string>();
 			nodes = new List<string>();
@@ -42,6 +44,7 @@ namespace VScript_Core.Graph
 
 				name = json.Get<string>("name");
 				id = json.Get<int>("id");
+                lang = json.Get<string>("lang");
 
 				module_dep = json.GetList<string>("module_dep");
 				file_dep = json.GetList<string>("file_dep");
@@ -58,6 +61,7 @@ namespace VScript_Core.Graph
 			JsonObject json = new JsonObject();
 			json.Put("name", name);
 			json.Put("id", id);
+            json.Put("lang", lang);
 
 			json.PutList("module_dep", module_dep);
 			json.PutList("file_dep", file_dep);
