@@ -15,6 +15,7 @@ public class SocketDescription : MonoBehaviour {
 
 	[SerializeField]
 	private TextMesh SocketName;
+	public Color SocketColour { get { return SocketSprite.color; } }
 	[SerializeField]
 	private SpriteRenderer SocketSprite;
 
