@@ -17,6 +17,8 @@ public class NodeDescription : MonoBehaviour {
 	private TextMesh HeaderText;
 	[SerializeField]
 	private SpriteRenderer HeaderBar;
+	[SerializeField]
+	private GameObject ResizableBody;
 
 	[SerializeField]
 	private SocketDescription DefaultSocket;
@@ -73,16 +75,16 @@ public class NodeDescription : MonoBehaviour {
 			socket_desc.SetSocketType(input.ExectutionType);
 			socket_desc.SetIOType(SocketDescription.IOType.Input);
 
-			socket.transform.position = new Vector2(
+			socket.transform.localPosition = new Vector2(
 				-ConnectionLocation,
 				- 0.414f - ConnectionSpacing * i
 				);
-			socket.transform.position += transform.position;
 
 			Inputs.Add(socket_desc);
 			i++;
         }
-	}
+		CheckNodeSize();
+    }
 
 	public void SetOutputs(NodeIO[] outputs)
 	{
@@ -111,14 +113,42 @@ public class NodeDescription : MonoBehaviour {
 			socket_desc.SetSocketType(output.ExectutionType);
 			socket_desc.SetIOType(SocketDescription.IOType.Output);
 
-			socket.transform.position = new Vector2(
+			socket.transform.localPosition = new Vector2(
 				ConnectionLocation,
 				-0.414f - ConnectionSpacing * i
 				);
-			socket.transform.position += transform.position;
 
 			Outputs.Add(socket_desc);
 			i++;
 		}
+		CheckNodeSize();
+    }
+
+	private void CheckNodeSize()
+	{
+		int size = 1;
+
+		if (Inputs != null && Outputs != null)
+		{
+			if (Inputs.Count > Outputs.Count)
+				size = Inputs.Count;
+			else
+				size = Outputs.Count;
+		}
+		else if (Inputs != null)
+			size = Inputs.Count;
+
+		else if (Outputs != null)
+			size = Outputs.Count;
+		
+		ResizableBody.transform.localScale = new Vector2(
+			ResizableBody.transform.localScale.x,
+            (size + 2) * ConnectionSpacing * 0.5f
+			);
+
+		ResizableBody.transform.localPosition = new Vector2(
+			ResizableBody.transform.localPosition.x,
+			-(size + 1) * ConnectionSpacing * 0.5f
+			);
 	}
 }
