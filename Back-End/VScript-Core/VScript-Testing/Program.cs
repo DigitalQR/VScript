@@ -35,13 +35,13 @@ namespace VScript_Testing
 			//node.source = "Print(i)";
 			//node.id = 69;
 
-			//IOType input_0 = new IOType();
+			IOType input_0 = new IOType();
 			//input_0.name = "in 0";
 			//input_0.is_execution = true;
 			//node.inputs.Add(input_0);
-			//node.inputs.Add(input_0);
-			//node.Export();
-			node.Import();
+			node.inputs.Add(input_0);
+			node.Export();
+			//node.Import();
 
 			Logger.Log(node.ToString());
 
