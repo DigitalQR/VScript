@@ -1,0 +1,27 @@
+{
+	"name":"Print",
+	"id":2,
+	"source":"
+	{ei:begin}
+	print({vi:message})
+	{eo:end}	
+	",
+	"inputs":[
+		{
+			"name":"being",
+			"display_name": "",
+			"is_execution":True
+		},
+		{
+			"name":"message",
+			"is_execution":False
+		}
+	],
+	"outputs":[
+		{
+			"name":"end",
+			"display_name": "",
+			"is_execution":False
+		}
+	]
+}

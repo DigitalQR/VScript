@@ -44,6 +44,7 @@
     <Compile Include="Graph\Json\JsonArray.cs" />
     <Compile Include="Graph\Json\JsonObject.cs" />
     <Compile Include="Graph\Json\JsonValue.cs" />
+    <Compile Include="Graph\Library.cs" />
     <Compile Include="Graph\Module.cs" />
     <Compile Include="Graph\Node.cs" />
     <Compile Include="Logger.cs" />

@@ -1,0 +1,33 @@
+{
+	"name":"If",
+	"id":1,
+	"source":"
+	{ei:begin}
+
+	if {vi:condition}:
+		{eo:true}
+	else:
+		{eo:false}
+	",
+	"inputs":[
+		{
+			"name":"begin",
+			"display_name": "",
+			"is_execution":True
+		},
+		{
+			"name":"condition",
+			"is_execution":False
+		}
+	],
+	"outputs":[
+		{
+			"name":"true",
+			"is_execution":True
+		},
+		{
+			"name":"false",
+			"is_execution":True
+		}
+	]
+}
