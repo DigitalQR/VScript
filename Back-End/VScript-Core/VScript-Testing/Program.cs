@@ -31,7 +31,7 @@ namespace VScript_Testing
 			Logger.Log(module.ToString());
 			*/
 
-			Node node = new Node("Test");
+			Node node = new Node("Example");
 			//node.source = "Print(i)";
 			//node.id = 69;
 

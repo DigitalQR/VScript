@@ -14,15 +14,15 @@ namespace VScript_Core.Graph.Json
 		public JsonObject(string raw_json = "")
 		{
 			raw_values = new Dictionary<string, JsonValue>();
-			
+
 
 			if (raw_json.Length == 0)
 				return;
 
-
 			//Parse raw json
 			int bracket_count = -1;
 			bool reading_key = true;
+			bool reading_string = false;
 
 			bool reading_sub_object = false;
 			bool reading_sub_array = false;
@@ -33,71 +33,75 @@ namespace VScript_Core.Graph.Json
 
 			foreach (char c in raw_json)
 			{
-				//Ignore next ',' or '}' char
-				if (just_read_sub_struct)
+				if (!reading_string)
 				{
-					just_read_sub_struct = false;
-                    continue;
-                }
-				
-				//Check brackets
-				if (c == '{' || c == '[')
-				{
-					bracket_count++;
 
-					//Ignore first bracket
-					if (bracket_count == 0)
+					//Ignore next ',' or '}' char
+					if (just_read_sub_struct)
+					{
+						just_read_sub_struct = false;
 						continue;
-                }
-				else if (c == '}' || c == ']')
-					bracket_count--;
+					}
+
+					//Check brackets
+					if (c == '{' || c == '[')
+					{
+						bracket_count++;
+
+						//Ignore first bracket
+						if (bracket_count == 0)
+							continue;
+					}
+					else if (c == '}' || c == ']')
+						bracket_count--;
 
 
-				//Check to see if reading array or object
-				if (!reading_sub_array && c == '{')
-					reading_sub_object = true;
+					//Check to see if reading array or object
+					if (!reading_sub_array && c == '{')
+						reading_sub_object = true;
 
-				if (!reading_sub_object && c == '[')
-					reading_sub_array = true;
+					if (!reading_sub_object && c == '[')
+						reading_sub_array = true;
 
 
-				//Store object until ready
-				if (reading_sub_object)
-				{
-					current_value += c;
+					//Store object until ready
+					if (reading_sub_object)
+					{
+						current_value += c;
 
-					if (bracket_count != 0)
+						if (bracket_count != 0)
+							continue;
+
+						//At end of sub object
+						PutRaw(current_key, new JsonObject(current_value));
+
+						reading_key = true;
+						current_key = "";
+						current_value = "";
+						reading_sub_object = false;
+						just_read_sub_struct = true;
 						continue;
-
-					//At end of sub object
-					PutRaw(current_key, new JsonObject(current_value));
-
-					reading_key = true;
-					current_key = "";
-					current_value = "";
-					reading_sub_object = false;
-					just_read_sub_struct = true;
-                    continue;
-				}
+					}
 
 
-				//Store array until ready
-				if (reading_sub_array)
-				{
-					current_value += c;
+					//Store array until ready
+					if (reading_sub_array)
+					{
+						current_value += c;
 
-					if (bracket_count != 0)
+						if (bracket_count != 0)
+							continue;
+
+						//At end of sub array
+						PutRaw(current_key, new JsonArray(current_value));
+
+						reading_key = true;
+						current_key = "";
+						current_value = "";
+						reading_sub_array = false;
+						just_read_sub_struct = true;
 						continue;
-
-					//At end of sub array
-					PutRaw(current_key, new JsonArray(current_value));
-
-					reading_key = true;
-					current_key = "";
-					current_value = "";
-					reading_sub_array = false;
-					just_read_sub_struct = true;
-					continue;
+					}
 				}
 
 
@@ -149,8 +153,8 @@ namespace VScript_Core.Graph.Json
 
 					//String
 					if (value.StartsWith("\""))
-                    {
-						string corrected_string = value.Substring(1).Substring(0, value.Length-2);
+					{
+						string corrected_string = value.Substring(1).Substring(0, value.Length - 2);
 						Put(key, corrected_string);
 						continue;
 					}
@@ -158,13 +162,21 @@ namespace VScript_Core.Graph.Json
 					//Unknown type, if here
 				}
 
+				if (c == '\r')
+					continue;
+
+				if (c == '"')
+					reading_string = !reading_string;
+
+				if (!reading_string && (c == '\n' || c == '\t' || c == '\r'))
+					continue;
 
 				if (reading_key)
 					current_key += c;
 				else
 					current_value += c;
 			}
-        }
+		}
 
 		/**
 		Encode current object in json format
