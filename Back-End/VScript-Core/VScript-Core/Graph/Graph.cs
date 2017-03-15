@@ -75,6 +75,8 @@ namespace VScript_Core.Graph
 	public class Graph
 	{
 		private static string extention = ".graph.json";
+		public static string file_extention { get { return extention; } }
+
 		public string name { get; private set; }
 		public NodeMeta root_node { get; private set; }
 

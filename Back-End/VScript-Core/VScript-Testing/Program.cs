@@ -17,9 +17,9 @@ namespace VScript_Testing
 		{
 			Logger.Log("Hello World");
 
-			Library.main.LoadModule("../../Modules", "Core");
-			Node node = Library.main.GetNode(1, 2);
-			Logger.Log(node.ToString());
+			Library.main.LoadModules("../../Modules");
+			//Node node = Library.main.GetNode(1, 2);
+			//Logger.Log(node.ToString());
 
 			Logger.Log("Done");
 			Console.ReadLine();

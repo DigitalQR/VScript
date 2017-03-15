@@ -37,6 +37,8 @@ namespace VScript_Core.Graph
 	public class Node
 	{
 		private static string extention = ".node.json";
+		public static string file_extention { get { return extention; } }
+
 		public string name;
 		public string source;
 		public int id;

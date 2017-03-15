@@ -12,6 +12,8 @@ namespace VScript_Core.Graph
 	public class Module
 	{
 		private static string extention = ".module.json";
+		public static string file_extention { get { return extention; }	}
+
 		public string name { get; private set; }
 		public int id { get; private set; }
 		public string lang { get; private set; }

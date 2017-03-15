@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace VScript_Core.Graph
 {
@@ -41,10 +42,32 @@ namespace VScript_Core.Graph
 			start_node.outputs.Add(output);
 		}
 
-		public void LoadModule(string folder, string name)
+		public void LoadModules(string folder)
+		{
+			int start_index = folder.Length + 1;
+
+			foreach (string file in Directory.GetFiles(folder))
+			{
+				if (file.EndsWith(Module.file_extention))
+				{
+					string module_name = file.Substring(start_index, file.Length - start_index - Module.file_extention.Length);
+					LoadModule(folder, module_name);
+                }
+			}
+		}
+
+
+        public void LoadModule(string folder, string name)
 		{
 			Module module = new Module(folder + "/" + name, "Python3");
 			module.Import();
+
+			if (module_nodes.ContainsKey(module.id))
+			{
+				Logger.LogError("Cannot load module '" + name + "':" + module.id + " as module with same id already exists");
+				return;
+			}
+
 
 			Dictionary<int, Node> nodes = new Dictionary<int, Node>();
 
@@ -53,10 +76,16 @@ namespace VScript_Core.Graph
 				Node node = new Node(folder + "/" + node_name);
 				node.Import();
 
+				if (nodes.ContainsKey(node.id))
+				{
+					Logger.LogError("Cannot load node '" + node_name + "':" + node.id + " in module '" + name + "' as node with same id already exists");
+					continue;
+				}
 				nodes.Add(node.id, node);
 			}
 
 			module_nodes.Add(module.id, nodes);
+			Logger.Log("Loaded module '" + name + "':" + module.id + " with " + nodes.Count + " nodes");
         }
 
 		public Node GetNode(int module_id, int node_id)
