@@ -23,24 +23,69 @@ namespace VScript_Core.Graph
 
 
 		private Dictionary<int, Dictionary<int, Node>> module_nodes = new Dictionary<int, Dictionary<int, Node>>();
-		private Node start_node;
 
 		private Library()
 		{
-			start_node = new Node("Start");
-			start_node.colour_r = 0.1f;
-			start_node.colour_g = 0.1f;
-			start_node.colour_b = 1.0f;
+			LoadDefaults();
+        }
 
-			start_node.source = "{eo:end}";
+		private void LoadDefaults()
+		{
+			Dictionary<int, Node> default_nodes = new Dictionary<int, Node>();
 
-			IOType output = new IOType();
-			output.name = "end";
-            output.display_name = "";
-			output.is_execution = true;
+			//Null node
+			{
+				Node null_node = new Node("Null");
+				null_node.source = "pass";
+				default_nodes.Add(0, null_node);
+			}
 
-			start_node.outputs.Add(output);
-		}
+			//Start node
+			{
+				Node start_node = new Node("Start");
+				start_node.id = 1;
+				start_node.colour_r = 0.1f;
+				start_node.colour_g = 0.1f;
+				start_node.colour_b = 1.0f;
+
+				start_node.source = "{eo:end}";
+
+				NodeIO output = new NodeIO();
+				output.name = "end";
+				output.display_name = "";
+				output.is_execution = true;
+
+				start_node.outputs.Add(output);
+				default_nodes.Add(1, start_node);
+			}
+
+			//True
+			{
+				Node const_node = new Node("True");
+				const_node.id = 2;
+				const_node.colour_r = 1.0f;
+				const_node.colour_g = 0.1f;
+				const_node.colour_b = 0.1f;
+
+				const_node.source = "True{vo:end}";
+
+				default_nodes.Add(2, const_node);
+			}
+			//False
+			{
+				Node const_node = new Node("False");
+				const_node.id = 3;
+				const_node.colour_r = 1.0f;
+				const_node.colour_g = 0.1f;
+				const_node.colour_b = 0.1f;
+
+				const_node.source = "False{vo:end}";
+				
+				default_nodes.Add(3, const_node);
+			}
+
+			module_nodes.Add(0, default_nodes);
+        }
 
 		public void LoadModules(string folder)
 		{
@@ -88,11 +133,15 @@ namespace VScript_Core.Graph
 			Logger.Log("Loaded module '" + name + "':" + module.id + " with " + nodes.Count + " nodes");
         }
 
-		public Node GetNode(int module_id, int node_id)
+		public Node GetNode(GraphNode node_meta)
 		{
-			if (module_id == 0 && node_id == 0)
-				return start_node;
-			
+			//Do special stuff here using node_meta
+
+			return GetNode(node_meta.module_id, node_meta.node_id);
+        }
+
+        private Node GetNode(int module_id, int node_id)
+		{
 			return module_nodes[module_id][node_id];
 		}
 

@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graph\Compiler.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Graph\Json\JsonArray.cs" />
     <Compile Include="Graph\Json\JsonObject.cs" />

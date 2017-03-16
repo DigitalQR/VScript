@@ -9,41 +9,65 @@ using VScript_Core.Graph.Json;
 
 namespace VScript_Core.Graph
 {
-	public struct NodeMeta
+	public struct GraphNode
 	{
 		public int module_id;
 		public int node_id;
-		public List<NodeMeta> forwards_conn;
-		public List<NodeMeta> backwards_conn;
-		
+		public Dictionary<string, GraphNode> inputs;
+		public Dictionary<string, GraphNode> outputs;
+		public JsonObject meta_data;
 
-		public NodeMeta(int module_id, int node_id)
+		public GraphNode(int module_id, int node_id)
 		{
 			this.module_id = module_id;
 			this.node_id = node_id;
-			forwards_conn = new List<NodeMeta>();
-			backwards_conn = new List<NodeMeta>();
+			inputs = new Dictionary<string, GraphNode>();
+			outputs = new Dictionary<string, GraphNode>();
+			meta_data = new JsonObject();
+        }
+
+		public GraphNode GetInput(string name)
+		{
+			if (inputs.ContainsKey(name))
+				return inputs[name];
+			else
+				return new GraphNode(0, 0);
+		}
+
+		public GraphNode GetOutput(string name)
+		{
+			if (outputs.ContainsKey(name))
+				return outputs[name];
+			else
+				return new GraphNode(0, 0);
 		}
 
 		public void ParseFromJson(JsonObject json)
 		{
 			module_id = json.Get<int>("module_id");
 			node_id = json.Get<int>("node_id");
+			meta_data = json.GetObject("meta_data");
 
-			foreach (JsonObject sub_json in json.GetObjectList("forwards_conn"))
-            {
-				NodeMeta sub_meta = new NodeMeta(0, 0);
-				sub_meta.ParseFromJson(sub_json);
-				forwards_conn.Add(sub_meta);
-			}
-
-			foreach (JsonObject sub_json in json.GetObjectList("backwards_conn"))
+			foreach (JsonObject sub_json in json.GetObjectList("inputs"))
 			{
-				NodeMeta sub_meta = new NodeMeta(0, 0);
-				sub_meta.ParseFromJson(sub_json);
-				backwards_conn.Add(sub_meta);
+				string name = sub_json.Get<string>("name");
+				JsonObject obj = sub_json.GetObject("object");
+
+				GraphNode sub_meta = new GraphNode();
+				sub_meta.ParseFromJson(obj);
+				inputs.Add(name, sub_meta);
 			}
-		}
+
+			foreach (JsonObject sub_json in json.GetObjectList("outputs"))
+			{
+				string name = sub_json.Get<string>("name");
+				JsonObject obj = sub_json.GetObject("object");
+
+				GraphNode sub_meta = new GraphNode();
+				sub_meta.ParseFromJson(obj);
+				outputs.Add(name, sub_meta);
+			}
+        }
 
 		public JsonObject GetAsJson()
 		{
@@ -51,18 +75,30 @@ namespace VScript_Core.Graph
 			JsonObject json = new JsonObject();
 			json.Put("module_id", module_id);
 			json.Put("node_id", node_id);
+			json.PutRaw("meta_data", meta_data);
 
-			JsonArray forwards_json = new JsonArray();
-			JsonArray backwards_json = new JsonArray();
+			JsonArray input_json = new JsonArray();
+			JsonArray output_json = new JsonArray();
 
-			foreach (NodeMeta meta in forwards_conn)
-				forwards_json.Add(meta.GetAsJson());
+			foreach (KeyValuePair<string, GraphNode> connection in inputs)
+			{
+				JsonObject con_json = new JsonObject();
+				con_json.Put("name", connection.Key);
+				con_json.Put("object", connection.Value.GetAsJson());
+				input_json.Add(con_json);
+			}
 
-			foreach (NodeMeta meta in backwards_conn)
-				backwards_json.Add(meta.GetAsJson());
-
-			json.PutRaw("forwards_conn", forwards_json);
-			json.PutRaw("backwards_conn", backwards_json);
+			foreach (KeyValuePair<string, GraphNode> connection in outputs)
+			{
+				JsonObject con_json = new JsonObject();
+				con_json.Put("name", connection.Key);
+				con_json.Put("object", connection.Value.GetAsJson());
+				output_json.Add(con_json);
+			}
+			
+			json.PutRaw("inputs", input_json);
+			json.PutRaw("outputs", output_json);
+			
 			return json;
         }
 
@@ -78,12 +114,12 @@ namespace VScript_Core.Graph
 		public static string file_extention { get { return extention; } }
 
 		public string name { get; private set; }
-		public NodeMeta root_node { get; private set; }
+		public GraphNode root_node { get; private set; }
 
 		public Graph(string name)
 		{
 			this.name = name;
-			root_node = new NodeMeta(0, 0);//Null/Start node
+			root_node = new GraphNode(0, 1);//Null/Start node
         }
 
 		public void Export()
@@ -96,8 +132,10 @@ namespace VScript_Core.Graph
 			try
 			{
 				string raw_json = File.ReadAllText(name + extention);
-				root_node.ParseFromJson(new JsonObject(raw_json));
-			}
+				GraphNode node = new GraphNode();
+				node.ParseFromJson(new JsonObject(raw_json));
+				root_node = node;
+            }
 			catch (FileNotFoundException)
 			{
 				Logger.LogError("Unable to import '" + name + extention + "'");

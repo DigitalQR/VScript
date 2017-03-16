@@ -9,7 +9,7 @@ using VScript_Core.Graph.Json;
 
 namespace VScript_Core.Graph
 {
-	public struct IOType
+	public struct NodeIO
 	{
 		public string name;
 		public string display_name;
@@ -47,16 +47,32 @@ namespace VScript_Core.Graph
 		public float colour_g;
 		public float colour_b;
 
-		public List<IOType> inputs;
-		public List<IOType> outputs;
+		public List<NodeIO> inputs;
+		public List<NodeIO> outputs;
 
 
 		public Node(string name)
 		{
 			this.name = name;
 
-			inputs = new List<IOType>();
-			outputs = new List<IOType>();
+			inputs = new List<NodeIO>();
+			outputs = new List<NodeIO>();
+		}
+
+		public int GetInputIndex(string key)
+		{
+			for (int i = 0; i < inputs.Count; i++)
+				if (inputs[i].name == key)
+					return i;
+			return -1;
+		}
+
+		public int GetOutputIndex(string key)
+		{
+			for (int i = 0; i < outputs.Count; i++)
+				if (outputs[i].name == key)
+					return i;
+			return -1;
 		}
 
 		public void Export()
@@ -81,7 +97,7 @@ namespace VScript_Core.Graph
 
 				foreach (JsonObject input_json in json.GetObjectList("inputs"))
 				{
-					IOType input = new IOType();
+					NodeIO input = new NodeIO();
 					input.name = input_json.Get<string>("name");
 					input.display_name = input_json.Get<string>("display_name", input.name);
 					input.is_execution = input_json.Get<bool>("is_execution");
@@ -95,7 +111,7 @@ namespace VScript_Core.Graph
 
 				foreach (JsonObject output_json in json.GetObjectList("outputs"))
 				{
-					IOType output = new IOType();
+					NodeIO output = new NodeIO();
 					output.name = output_json.Get<string>("name");
 					output.display_name = output_json.Get<string>("display_name", output.name);
 					output.is_execution = output_json.Get<bool>("is_execution");
@@ -127,15 +143,98 @@ namespace VScript_Core.Graph
 			List<JsonObject> input_objects = new List<JsonObject>();
 			List<JsonObject> output_objects = new List<JsonObject>();
 
-			foreach (IOType input in inputs)
+			foreach (NodeIO input in inputs)
 				input_objects.Add(input.ToJson());
 
-			foreach (IOType output in outputs)
+			foreach (NodeIO output in outputs)
 				output_objects.Add(output.ToJson());
 
 			json.PutObjectList("inputs", input_objects);
 			json.PutObjectList("outputs", output_objects);
 			return json.ToString();
+		}
+
+		public virtual string GetSource(int indentation = 0)
+		{
+			return GetCorrectedSource(source, indentation);
+		}
+
+		public static int GetIndentation(string source)
+		{
+			int start_indentation = -1;
+			int current_indentation = 0;
+			bool found_letter = false;
+
+			foreach (char c in source)
+			{
+				if (c == '\t')
+					current_indentation++;
+
+				else if (c == '\n')
+				{
+					if (found_letter && (start_indentation == -1 || current_indentation < start_indentation))
+						start_indentation = current_indentation;
+
+					current_indentation = 0;
+					found_letter = false;
+				}
+				else
+					found_letter = true;
+			}
+
+			if (found_letter && (start_indentation == -1 || current_indentation < start_indentation))
+				start_indentation = current_indentation;
+
+			return start_indentation == -1 ? 0 : start_indentation;
+		}
+
+		public static string GetCorrectedSource(string source, int indentation)
+		{
+			int start_indentation = GetIndentation(source);
+
+			string corrected_string = "";
+			string current_line = "";
+			int current_indentation = -start_indentation;
+			bool found_start = false;
+
+
+			foreach (char c in source)
+			{
+				if (!found_start)
+				{
+					if (c == '\t')
+					{
+						current_indentation++;
+
+						if (current_indentation <= 0)
+							continue;
+					}
+					else
+					{
+						found_start = true;
+
+						for (int i = 0; i < indentation; i++)
+							corrected_string += '\t';
+					}
+				}
+				
+				if (c == '\n')
+				{
+					if (current_line != "")
+						corrected_string += current_line + "\n";
+					current_line = "";
+
+					current_indentation = -start_indentation;
+					found_start = false;
+				}
+				else
+					current_line += c;
+			}
+
+			if (current_line != "")
+				corrected_string += current_line;
+
+			return corrected_string;
 		}
 	}
 }

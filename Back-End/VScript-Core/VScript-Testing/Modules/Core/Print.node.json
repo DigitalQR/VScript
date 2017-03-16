@@ -2,13 +2,12 @@
 	"name":"Print",
 	"id":2,
 	"source":"
-	{ei:begin}
-	print({vi:message})
-	{eo:end}	
+	{ei:begin}print({vi:message})
+	{eo:end}
 	",
 	"inputs":[
 		{
-			"name":"being",
+			"name":"begin",
 			"display_name": "",
 			"is_execution":True
 		},
