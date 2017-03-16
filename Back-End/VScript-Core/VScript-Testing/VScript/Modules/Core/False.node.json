@@ -1,21 +1,19 @@
 {
-	"name":"False",
-	"id":6,
-	"source":"
+	"name": "False",
+	"id": 6,
+	"source": "
 	False{vo:end}
 	",
-	"colour_r":1,
-	"colour_g":0,
-	"colour_b":0,
-	"inputs":[],
-	"outputs":[
-		{
-			"name":"end",
-			"display_name": ""
-			"is_execution":False,
-			"colour_r":1,
-			"colour_g":0,
-			"colour_b":0,
-		}
-	]
+	"colour_r": 1,
+	"colour_g": 0,
+	"colour_b": 0,
+	"inputs": [],
+	"outputs": [{
+		"name": "end",
+		"display_name": "",
+		"is_execution": False,
+		"colour_r": 1,
+		"colour_g": 0,
+		"colour_b": 0,
+	}]
 }
