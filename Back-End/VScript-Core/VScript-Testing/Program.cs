@@ -17,8 +17,7 @@ namespace VScript_Testing
 		{
 			Logger.Log("Hello World");
 
-            VScriptEngine.engine_directory = "../../";
-            VScriptEngine.python_exe_directory = "C:/Python35-32/python.exe";
+            VScriptEngine.engine_directory = "../../VScript/";
             VScriptEngine.Init();
 
             Graph graph = VScriptEngine.GetGraph("Example");

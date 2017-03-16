@@ -168,7 +168,7 @@ namespace VScript_Core.Graphing.Json
 				if (c == '"')
 					reading_string = !reading_string;
 
-				if (!reading_string && (c == '\n' || c == '\t' || c == '\r'))
+				if (!reading_string && (c == '\n' || c == '\t' || c == '\r' || c == ' '))
 					continue;
 
 				if (reading_key)
