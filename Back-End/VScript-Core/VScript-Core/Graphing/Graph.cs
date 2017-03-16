@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-using VScript_Core.Graph.Json;
+using VScript_Core.Graphing.Json;
 
-namespace VScript_Core.Graph
+namespace VScript_Core.Graphing
 {
 	public class GraphNode
 	{
@@ -111,42 +111,48 @@ namespace VScript_Core.Graph
 		private static string extention = ".graph.json";
 		public static string file_extention { get { return extention; } }
 
-		public string name { get; private set; }
-		public GraphNode start_node { get; private set; }
+        public string display_name { get; private set; }
+        public GraphNode start_node { get; private set; }
         private Dictionary<Guid, GraphNode> nodes;
 
 		public Graph(string name)
 		{
-			this.name = name;
+			this.display_name = name;
             nodes = new Dictionary<Guid, GraphNode>();
 
             start_node = AddNode(0, 1);//Start node
             start_node.guid = Guid.Empty;
         }
+
         public GraphNode AddNode(int module_id, int node_id)
         {
             GraphNode node = new GraphNode(module_id, node_id);
             return AddNode(node);
         }
+
         private GraphNode AddNode(GraphNode node)
         {
             node.parent = this;
             nodes.Add(node.guid, node);
             return node;
         }
+
         public void RemoveNode(GraphNode node)
         {
             nodes.Remove(node.guid);
         }
+
         public void Clear()
         {
             nodes.Clear();
         }
+
         public void AddConnection(GraphNode out_node, string out_key, GraphNode in_node, string in_key)
         {
             out_node.outputs[out_key] = in_node.guid;
             in_node.inputs[in_key] = out_node.guid;
         }
+
         public void RemoveConnection(GraphNode out_node, string out_key, GraphNode in_node, string in_key)
         {
             if (out_node.outputs.ContainsKey(out_key) && in_node.inputs.ContainsKey(in_key)
@@ -159,21 +165,23 @@ namespace VScript_Core.Graph
             else
                 Logger.LogError("Attempting to remove invalid connection between '" + out_node.module_id + ":" + out_node.node_id + "' and '" + in_node.module_id + ":" + in_node.node_id + "'");
         }
+
         public GraphNode GetNode(Guid guid)
         {
             return nodes[guid];
         }
 
-		public void Export()
+		public void Export(string project_directory)
 		{
-			File.WriteAllText(name + extention, ToString());
+			File.WriteAllText(project_directory + display_name + extention, ToString());
 		}
-		public void Import()
+
+		public bool Import(string project_directory)
 		{
 			try
 			{
                 Clear();
-                JsonObject json = new JsonObject(File.ReadAllText(name + extention));
+                JsonObject json = new JsonObject(File.ReadAllText(project_directory + display_name + extention));
 
                 foreach (JsonObject node_json in json.GetObjectList("nodes"))
                 {
@@ -185,13 +193,16 @@ namespace VScript_Core.Graph
 
                     AddNode(node);
                 }
+
+                return true;
             }
 			catch (FileNotFoundException)
 			{
-				Logger.LogError("Unable to import '" + name + extention + "'");
+                return false;
 			}
 			
 		}
+
 		public override string ToString()
 		{
             JsonObject json = new JsonObject();

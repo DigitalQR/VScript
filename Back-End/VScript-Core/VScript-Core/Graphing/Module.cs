@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-using VScript_Core.Graph.Json;
+using VScript_Core.Graphing.Json;
 
-namespace VScript_Core.Graph
+namespace VScript_Core.Graphing
 {
 	public class Module
 	{

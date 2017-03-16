@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VScript_Core.Graph.Json
+namespace VScript_Core.Graphing.Json
 {
 	public class JsonValue
 	{

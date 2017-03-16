@@ -40,19 +40,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graph\Compiler.cs" />
-    <Compile Include="Graph\Graph.cs" />
-    <Compile Include="Graph\Json\JsonArray.cs" />
-    <Compile Include="Graph\Json\JsonObject.cs" />
-    <Compile Include="Graph\Json\JsonValue.cs" />
-    <Compile Include="Graph\Library.cs" />
-    <Compile Include="Graph\Module.cs" />
-    <Compile Include="Graph\Node.cs" />
+    <Compile Include="Graphing\Compiler.cs" />
+    <Compile Include="Graphing\Graph.cs" />
+    <Compile Include="Graphing\Json\JsonArray.cs" />
+    <Compile Include="Graphing\Json\JsonObject.cs" />
+    <Compile Include="Graphing\Json\JsonValue.cs" />
+    <Compile Include="Graphing\Library.cs" />
+    <Compile Include="Graphing\Module.cs" />
+    <Compile Include="Graphing\Node.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PythonProgram.cs" />
+    <Compile Include="System\PythonConsole.cs" />
+    <Compile Include="System\PythonProgram.cs" />
     <Compile Include="System\SystemConsole.cs" />
+    <Compile Include="VScriptEngine.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

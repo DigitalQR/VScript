@@ -8,22 +8,39 @@ namespace VScript_Core
 {
 	public class Logger
 	{
+        public static bool stamp_time = true;
+
 		public static void Log(String message)
 		{
-			String date_stamp = DateTime.Now.ToString("[HH:mm:ss] ");
-			Console.WriteLine(date_stamp + message);
-		}
+            if (stamp_time)
+            {
+                String date_stamp = DateTime.Now.ToString("[HH:mm:ss] ");
+                Console.WriteLine(date_stamp + message);
+            }
+            else
+                Console.WriteLine(message);
+        }
 
 		public static void DebugLog(String message)
-		{
-			String date_stamp = DateTime.Now.ToString("[HH:mm:ss]~ ");
-			Console.WriteLine(date_stamp + message);
+        {
+            if (stamp_time)
+            {
+                String date_stamp = DateTime.Now.ToString("[HH:mm:ss]~ ");
+                Console.WriteLine(date_stamp + message);
+            }
+            else
+                Console.WriteLine(message);
 		}
 
 		public static void LogError(String message)
-		{
-			String date_stamp = DateTime.Now.ToString("[HH:mm:ss][ERROR] ");
-			Console.WriteLine(date_stamp + message);
+        {
+            if (stamp_time)
+            {
+                String date_stamp = DateTime.Now.ToString("[HH:mm:ss][ERROR] ");
+                Console.WriteLine(date_stamp + message);
+            }
+            else
+                Console.WriteLine(message);
 		}
 	}
 }

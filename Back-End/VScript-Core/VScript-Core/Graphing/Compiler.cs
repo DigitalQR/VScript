@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace VScript_Core.Graph
+namespace VScript_Core.Graphing
 {
 	public class Compiler
 	{
@@ -22,12 +22,16 @@ namespace VScript_Core.Graph
 		}
 
 		private enum IO_type { Exe, Var, Ref }
+        public string build_path = "Temp/Build/";
 
-		private string Expand(GraphNode current_node)
+        private string Expand(GraphNode current_node)
 		{
 			Node node = Library.main.GetNode(current_node);
 			string raw_source = node.GetSource(0);
 			string real_source = "";
+
+            if (raw_source == "")
+                return "";
 			
 			
 			using (StringReader reader = new StringReader(raw_source))
@@ -171,14 +175,13 @@ namespace VScript_Core.Graph
 
 		public string Compile(Graph graph)
         {
-            Logger.DebugLog("Starting Compile..");
-            string build_path = "Build/" + graph.name + ".py";
-            Logger.DebugLog("Building to '" + build_path + "'");
+            string graph_path = build_path + graph.display_name + ".py";
+            Logger.DebugLog("Starting Compile '" + graph_path + "'");
 
-            Directory.CreateDirectory(build_path.Substring(0, build_path.LastIndexOf("/")));
-            File.WriteAllText(build_path, Expand(graph.start_node));
+            Directory.CreateDirectory(build_path);
+            File.WriteAllText(graph_path, Expand(graph.start_node));
 			Logger.DebugLog("Finished Compile!");
-			return build_path;
+			return graph_path;
 		}
 	}
 }

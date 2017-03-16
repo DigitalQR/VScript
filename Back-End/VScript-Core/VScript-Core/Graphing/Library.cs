@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace VScript_Core.Graph
+namespace VScript_Core.Graphing
 {
 	public class Library
 	{
@@ -36,7 +36,7 @@ namespace VScript_Core.Graph
 			//Null node
 			{
 				Node null_node = new Node("Null");
-				null_node.source = "pass";
+				null_node.source = "";
 				default_nodes.Add(0, null_node);
 			}
 
