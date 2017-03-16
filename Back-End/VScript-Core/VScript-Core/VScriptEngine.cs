@@ -64,7 +64,13 @@ namespace VScript_Core
         public static void CompileAndRun(Graph graph)
         {
             Logger.Log("===Executing '" + graph.display_name + "'===");
-            Process process = PythonConsole.CompileAndRun(graph);
+            PythonConsole.ReadInput input_function =
+                delegate() 
+                {
+                    return "test input string";
+                };
+            
+            Process process = PythonConsole.CompileAndRun(graph, input_function);
             process.WaitForExit();
             Logger.Log("===Finished execution===");
         }

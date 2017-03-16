@@ -220,8 +220,7 @@ namespace VScript_Core.Graphing
 				
 				if (c == '\n')
 				{
-					if (current_line != "")
-						corrected_string += current_line + "\n";
+					corrected_string += current_line + "\n";
 					current_line = "";
 
 					current_indentation = -start_indentation;

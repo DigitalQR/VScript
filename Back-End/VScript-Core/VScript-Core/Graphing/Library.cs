@@ -36,7 +36,7 @@ namespace VScript_Core.Graphing
 			//Null node
 			{
 				Node null_node = new Node("Null");
-				null_node.source = "";
+				null_node.source = "pass";
 				default_nodes.Add(0, null_node);
 			}
 
@@ -82,9 +82,21 @@ namespace VScript_Core.Graphing
 				const_node.source = "False{vo:end}";
 				
 				default_nodes.Add(3, const_node);
-			}
+            }
+            //Input
+            {
+                Node const_node = new Node("Input");
+                const_node.id = 4;
+                const_node.colour_r = 0.1f;
+                const_node.colour_g = 1.0f;
+                const_node.colour_b = 0.1f;
 
-			module_nodes.Add(0, default_nodes);
+                const_node.source = "input(){vo:end}";
+
+                default_nodes.Add(4, const_node);
+            }
+
+            module_nodes.Add(0, default_nodes);
         }
 
 		public void LoadModules(string folder)

@@ -15,11 +15,15 @@ namespace VScript_Core.System
     public class PythonConsole
     {        
         public static String exe_path = "C:/Python34/python.exe";
+        public delegate string ReadInput();
 
-        public static Process CompileAndRun(Graph graph)
+        public static Process CompileAndRun(Graph graph, ReadInput input_function)
         {
             string graph_path = Compiler.main.Compile(graph);
             Process process = FetchNewProcess(graph_path);
+
+            if (input_function != null)
+                process.StartInfo.RedirectStandardInput = true;
 
             try
             {
@@ -27,6 +31,19 @@ namespace VScript_Core.System
                 process.Start();
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
+
+                using (StreamWriter writer = process.StandardInput)
+                {
+                    while (!process.HasExited)
+                    {
+                        string input = input_function != null ? input_function() : "";
+
+                        if (input != "")
+                        {
+                            writer.WriteLine(input);
+                        }
+                    }   
+                }
             }
             catch (Win32Exception exception)
             {

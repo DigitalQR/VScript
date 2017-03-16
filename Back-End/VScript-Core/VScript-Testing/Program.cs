@@ -22,13 +22,28 @@ namespace VScript_Testing
             VScriptEngine.Init();
 
             Graph graph = VScriptEngine.GetGraph("Example");
+            /*
+            graph.Clear();
+            graph.AddNode(0, 1);
+
+            GraphNode if_node = graph.AddNode(1, 1);
             GraphNode print_node = graph.AddNode(1, 2);
             GraphNode true_node = graph.AddNode(0, 2);
 
-            graph.AddConnection(graph.start_node, "end", print_node, "begin");
-            graph.AddConnection(true_node, "end", print_node, "message");
+            GraphNode print2_node = graph.AddNode(1, 2);
+            GraphNode input_node = graph.AddNode(0, 4);
 
-            //graph.RemoveConnection(true_node, "endE", print_node, "message");
+            graph.AddConnection(graph.start_node, "end", if_node, "begin");
+
+            graph.AddConnection(true_node, "end", if_node, "condition");
+            graph.AddConnection(input_node, "end", print_node, "message");
+
+            graph.AddConnection(input_node, "end", print2_node, "message");
+            graph.AddConnection(print_node, "end", print2_node, "begin");
+
+            graph.AddConnection(if_node, "true", print_node, "begin");
+            graph.AddConnection(if_node, "false", print_node, "begin");
+            */
 
             VScriptEngine.CompileAndRun(graph);
             VScriptEngine.SaveAll();

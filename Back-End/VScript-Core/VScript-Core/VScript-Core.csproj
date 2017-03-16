@@ -51,8 +51,6 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="System\PythonConsole.cs" />
-    <Compile Include="System\PythonProgram.cs" />
-    <Compile Include="System\SystemConsole.cs" />
     <Compile Include="VScriptEngine.cs" />
   </ItemGroup>
   <ItemGroup />

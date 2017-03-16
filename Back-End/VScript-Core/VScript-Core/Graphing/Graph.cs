@@ -127,6 +127,9 @@ namespace VScript_Core.Graphing
         public GraphNode AddNode(int module_id, int node_id)
         {
             GraphNode node = new GraphNode(module_id, node_id);
+            if (module_id == 0 && node_id == 1)
+                node.guid = Guid.Empty;
+
             return AddNode(node);
         }
 
@@ -134,6 +137,10 @@ namespace VScript_Core.Graphing
         {
             node.parent = this;
             nodes.Add(node.guid, node);
+            
+            if (start_node == null && node.guid == Guid.Empty)
+                start_node = node;
+
             return node;
         }
 
@@ -145,6 +152,7 @@ namespace VScript_Core.Graphing
         public void Clear()
         {
             nodes.Clear();
+            start_node = null;
         }
 
         public void AddConnection(GraphNode out_node, string out_key, GraphNode in_node, string in_key)
@@ -181,16 +189,13 @@ namespace VScript_Core.Graphing
 			try
 			{
                 Clear();
+
                 JsonObject json = new JsonObject(File.ReadAllText(project_directory + display_name + extention));
 
                 foreach (JsonObject node_json in json.GetObjectList("nodes"))
                 {
                     GraphNode node = new GraphNode();
                     node.ParseFromJson(node_json);
-
-                    if (node.guid == Guid.Empty)
-                        start_node = node;
-
                     AddNode(node);
                 }
 

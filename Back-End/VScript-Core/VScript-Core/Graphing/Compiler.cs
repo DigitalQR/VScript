@@ -165,13 +165,14 @@ namespace VScript_Core.Graphing
 						}
                     }
 
-					real_source += real_line + '\n';
+                    if(real_line.Trim() != "")
+                        real_source += real_line + "\n";
                 }
 			}
 
-			//Remove final \n
-			return real_source.Substring(0, real_source.Length - 1);
-		}
+            //Remove final \n
+            return real_source.Length != 0 ? real_source.Substring(0, real_source.Length - 1) : "";
+        }
 
 		public string Compile(Graph graph)
         {
@@ -179,8 +180,10 @@ namespace VScript_Core.Graphing
             Logger.DebugLog("Starting Compile '" + graph_path + "'");
 
             Directory.CreateDirectory(build_path);
-            File.WriteAllText(graph_path, Expand(graph.start_node));
-			Logger.DebugLog("Finished Compile!");
+            string source = Expand(graph.start_node);
+            File.WriteAllText(graph_path, source);
+            Logger.DebugLog("\n===\n" + source);
+            Logger.DebugLog("Finished Compile!");
 			return graph_path;
 		}
 	}
