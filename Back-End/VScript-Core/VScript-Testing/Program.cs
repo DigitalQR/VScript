@@ -26,6 +26,10 @@ namespace VScript_Testing
             graph.Clear();
             graph.AddNode(0, 1);
 
+
+            GraphNode const_msg = graph.AddNode(0, 2);
+            const_msg.meta_data.Put("value", "\"Hard coded msg\"");
+
             GraphNode if_then = graph.AddNode(1, 2);
             GraphNode true_node = graph.AddNode(1, 5);
             GraphNode false_node = graph.AddNode(1, 6);
@@ -33,10 +37,12 @@ namespace VScript_Testing
             GraphNode print_false = graph.AddNode(1, 3);
             GraphNode input_node = graph.AddNode(1, 4);
             GraphNode print_input = graph.AddNode(1, 3);
+            GraphNode print_msg = graph.AddNode(1, 3);
 
             graph.AddConnection(true_node, "end", print_true, "message");
             graph.AddConnection(false_node, "end", print_false, "message");
             graph.AddConnection(input_node, "end", print_input, "message");
+            graph.AddConnection(const_msg, "end", print_msg, "message");
 
 
             graph.AddConnection(graph.start_node, "end", if_then, "begin");
@@ -45,6 +51,7 @@ namespace VScript_Testing
             graph.AddConnection(if_then, "true", print_true, "begin");
             graph.AddConnection(if_then, "false", print_false, "begin");
             graph.AddConnection(if_then, "end", print_input, "begin");
+            graph.AddConnection(print_input, "end", print_msg, "begin");
 
             //graph.AddConnection(if_then, "true", print_true, "begin");
             //graph.AddConnection(if_then, "false", print_false, "begin");

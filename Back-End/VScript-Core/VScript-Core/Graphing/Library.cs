@@ -40,24 +40,43 @@ namespace VScript_Core.Graphing
 				default_nodes.Add(0, null_node);
 			}
 
-			//Start node
-			{
-				Node start_node = new Node("Start");
-				start_node.id = 1;
-				start_node.colour_r = 0.1f;
-				start_node.colour_g = 0.1f;
-				start_node.colour_b = 1.0f;
+            //Start node
+            {
+                Node start_node = new Node("Start");
+                start_node.id = 1;
+                start_node.colour_r = 0.1f;
+                start_node.colour_g = 0.1f;
+                start_node.colour_b = 1.0f;
 
-				start_node.source = "{eo:end}";
+                start_node.source = "{eo:end}";
 
-				NodeIO output = new NodeIO();
-				output.name = "end";
-				output.display_name = "";
-				output.is_execution = true;
+                NodeIO output = new NodeIO();
+                output.name = "end";
+                output.display_name = "";
+                output.is_execution = true;
 
-				start_node.outputs.Add(output);
-				default_nodes.Add(1, start_node);
-			}
+                start_node.outputs.Add(output);
+                default_nodes.Add(1, start_node);
+            }
+
+            //String node
+            {
+                Node node = new Node("Const Input");
+                node.id = 2;
+                node.colour_r = 0.1f;
+                node.colour_g = 0.1f;
+                node.colour_b = 1.0f;
+
+                node.source = "None{vo:end}";
+
+                NodeIO output = new NodeIO();
+                output.name = "end";
+                output.display_name = "";
+                output.is_execution = false;
+
+                node.outputs.Add(output);
+                default_nodes.Add(2, node);
+            }
 
             module_nodes.Add(0, default_nodes);
         }
@@ -108,9 +127,15 @@ namespace VScript_Core.Graphing
 			Logger.Log("Loaded module '" + name + "':" + module.id + " with " + nodes.Count + " nodes");
         }
 
-		public Node GetNode(GraphNode node_meta)
-		{
-			//Do special stuff here using node_meta
+        public Node GetNode(GraphNode node_meta)
+        {
+            //Const Input
+            if (node_meta.module_id == 0 && node_meta.node_id == 2)
+            {
+                Node node = GetNode(0, 2);
+                node.source = node_meta.meta_data.Get("value", "None") + "{vo:end}";
+                return node;
+            }
 
 			return GetNode(node_meta.module_id, node_meta.node_id);
         }
