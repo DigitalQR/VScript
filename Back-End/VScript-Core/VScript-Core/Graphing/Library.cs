@@ -59,43 +59,6 @@ namespace VScript_Core.Graphing
 				default_nodes.Add(1, start_node);
 			}
 
-			//True
-			{
-				Node const_node = new Node("True");
-				const_node.id = 2;
-				const_node.colour_r = 1.0f;
-				const_node.colour_g = 0.1f;
-				const_node.colour_b = 0.1f;
-
-				const_node.source = "True{vo:end}";
-
-				default_nodes.Add(2, const_node);
-			}
-			//False
-			{
-				Node const_node = new Node("False");
-				const_node.id = 3;
-				const_node.colour_r = 1.0f;
-				const_node.colour_g = 0.1f;
-				const_node.colour_b = 0.1f;
-
-				const_node.source = "False{vo:end}";
-				
-				default_nodes.Add(3, const_node);
-            }
-            //Input
-            {
-                Node const_node = new Node("Input");
-                const_node.id = 4;
-                const_node.colour_r = 0.1f;
-                const_node.colour_g = 1.0f;
-                const_node.colour_b = 0.1f;
-
-                const_node.source = "input(){vo:end}";
-
-                default_nodes.Add(4, const_node);
-            }
-
             module_nodes.Add(0, default_nodes);
         }
 
@@ -116,7 +79,7 @@ namespace VScript_Core.Graphing
 
         public void LoadModule(string folder, string name)
 		{
-			Module module = new Module(folder + "/" + name, "Python3");
+			Module module = new Module(folder + "/" + name);
 			module.Import();
 
 			if (module_nodes.ContainsKey(module.id))

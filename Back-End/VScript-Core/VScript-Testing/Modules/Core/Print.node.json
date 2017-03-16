@@ -1,26 +1,38 @@
 {
 	"name":"Print",
-	"id":2,
+	"id":3,
 	"source":"
 	{ei:begin}print({vi:message})
 	{eo:end}
 	",
+	"colour_r":0,
+	"colour_g":0,
+	"colour_b":1,
 	"inputs":[
 		{
 			"name":"begin",
 			"display_name": "",
-			"is_execution":True
+			"is_execution":True,
+			"colour_r":1,
+			"colour_g":1,
+			"colour_b":1,
 		},
 		{
 			"name":"message",
-			"is_execution":False
+			"is_execution":False,
+			"colour_r":0,
+			"colour_g":1,
+			"colour_b":0,
 		}
 	],
 	"outputs":[
 		{
 			"name":"end",
-			"display_name": "",
-			"is_execution":False
+			"display_name": ""
+			"is_execution":True,
+			"colour_r":1,
+			"colour_g":1,
+			"colour_b":1,
 		}
 	]
 }

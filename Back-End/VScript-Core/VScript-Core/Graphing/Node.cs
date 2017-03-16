@@ -43,9 +43,9 @@ namespace VScript_Core.Graphing
 		public string source;
 		public int id;
 
-		public float colour_r;
-		public float colour_g;
-		public float colour_b;
+		public float colour_r = 1;
+		public float colour_g = 1;
+		public float colour_b = 1;
 
 		public List<NodeIO> inputs;
 		public List<NodeIO> outputs;
@@ -102,9 +102,9 @@ namespace VScript_Core.Graphing
 					input.display_name = input_json.Get<string>("display_name", input.name);
 					input.is_execution = input_json.Get<bool>("is_execution");
 
-					input.colour_r = input_json.Get<float>("colour_r");
-					input.colour_g = input_json.Get<float>("colour_g");
-					input.colour_b = input_json.Get<float>("colour_b");
+					input.colour_r = input_json.Get<float>("colour_r", 1);
+					input.colour_g = input_json.Get<float>("colour_g", 1);
+					input.colour_b = input_json.Get<float>("colour_b", 1);
 
 					inputs.Add(input);
 				}
@@ -116,9 +116,9 @@ namespace VScript_Core.Graphing
 					output.display_name = output_json.Get<string>("display_name", output.name);
 					output.is_execution = output_json.Get<bool>("is_execution");
 
-					output.colour_r = output_json.Get<float>("colour_r");
-					output.colour_g = output_json.Get<float>("colour_g");
-					output.colour_b = output_json.Get<float>("colour_b");
+					output.colour_r = output_json.Get<float>("colour_r", 1);
+					output.colour_g = output_json.Get<float>("colour_g", 1);
+					output.colour_b = output_json.Get<float>("colour_b", 1);
 
 					outputs.Add(output);
 				}

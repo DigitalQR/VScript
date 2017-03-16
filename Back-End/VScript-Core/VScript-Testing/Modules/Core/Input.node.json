@@ -1,0 +1,21 @@
+{
+	"name":"Input",
+	"id":4,
+	"source":"
+	input(){vo:end}
+	",
+	"colour_r":,
+	"colour_g":0,
+	"colour_b":0,
+	"inputs":[],
+	"outputs":[
+		{
+			"name":"end",
+			"display_name": ""
+			"is_execution":False,
+			"colour_r":0,
+			"colour_g":1,
+			"colour_b":0,
+		}
+	]
+}

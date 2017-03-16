@@ -22,28 +22,34 @@ namespace VScript_Testing
             VScriptEngine.Init();
 
             Graph graph = VScriptEngine.GetGraph("Example");
-            /*
+            
             graph.Clear();
             graph.AddNode(0, 1);
 
-            GraphNode if_node = graph.AddNode(1, 1);
-            GraphNode print_node = graph.AddNode(1, 2);
-            GraphNode true_node = graph.AddNode(0, 2);
+            GraphNode if_then = graph.AddNode(1, 2);
+            GraphNode true_node = graph.AddNode(1, 5);
+            GraphNode false_node = graph.AddNode(1, 6);
+            GraphNode print_true = graph.AddNode(1, 3);
+            GraphNode print_false = graph.AddNode(1, 3);
+            GraphNode input_node = graph.AddNode(1, 4);
+            GraphNode print_input = graph.AddNode(1, 3);
 
-            GraphNode print2_node = graph.AddNode(1, 2);
-            GraphNode input_node = graph.AddNode(0, 4);
+            graph.AddConnection(true_node, "end", print_true, "message");
+            graph.AddConnection(false_node, "end", print_false, "message");
+            graph.AddConnection(input_node, "end", print_input, "message");
 
-            graph.AddConnection(graph.start_node, "end", if_node, "begin");
 
-            graph.AddConnection(true_node, "end", if_node, "condition");
-            graph.AddConnection(input_node, "end", print_node, "message");
+            graph.AddConnection(graph.start_node, "end", if_then, "begin");
+            graph.AddConnection(true_node, "end", if_then, "condition");
 
-            graph.AddConnection(input_node, "end", print2_node, "message");
-            graph.AddConnection(print_node, "end", print2_node, "begin");
+            graph.AddConnection(if_then, "true", print_true, "begin");
+            graph.AddConnection(if_then, "false", print_false, "begin");
+            graph.AddConnection(if_then, "end", print_input, "begin");
 
-            graph.AddConnection(if_node, "true", print_node, "begin");
-            graph.AddConnection(if_node, "false", print_node, "begin");
-            */
+            //graph.AddConnection(if_then, "true", print_true, "begin");
+            //graph.AddConnection(if_then, "false", print_false, "begin");
+
+
 
             VScriptEngine.CompileAndRun(graph);
             VScriptEngine.SaveAll();

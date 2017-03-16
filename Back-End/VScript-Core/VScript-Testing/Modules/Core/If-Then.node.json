@@ -1,12 +1,12 @@
 {
-	"name":"If",
-	"id":1,
+	"name":"If Then",
+	"id":2,
 	"source":"
-	{ei:begin}
 	if {vi:condition}:
 		{eo:true}
 	else:
 		{eo:false}
+	{eo:end}
 	",
 	"colour_r":1,
 	"colour_g":0,
@@ -42,6 +42,14 @@
 			"colour_r":1,
 			"colour_g":0,
 			"colour_b":0,
+		},
+		{
+			"name":"end",
+			"display_name": "then"
+			"is_execution":True,
+			"colour_r":1,
+			"colour_g":1,
+			"colour_b":1,
 		}
 	]
 }

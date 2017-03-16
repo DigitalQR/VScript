@@ -19,7 +19,7 @@ namespace VScript_Core.Graphing
 		public string lang { get; private set; }
 
 		//Stores required file names
-		public List<string> module_dep { get; private set; }
+		public List<int> module_dep { get; private set; }
 		public List<string> file_dep { get; private set; }
 		public List<string> nodes { get; private set; }
 
@@ -27,7 +27,7 @@ namespace VScript_Core.Graphing
 		{
 			this.name = name;
 			this.lang = lang;
-			module_dep = new List<string>();
+			module_dep = new List<int>();
 			file_dep = new List<string>();
 			nodes = new List<string>();
 		}
@@ -48,7 +48,7 @@ namespace VScript_Core.Graphing
 				id = json.Get<int>("id");
 				lang = json.Get<string>("lang");
 
-				module_dep = json.GetList<string>("module_dep");
+				module_dep = json.GetList<int>("module_dep");
 				file_dep = json.GetList<string>("file_dep");
 				nodes = json.GetList<string>("nodes");
 			}

@@ -104,9 +104,9 @@ namespace VScript_Core.Graphing.Json
 					string value = current_value;
 					current_value = "";
 
-					//Attempt to find correct type
-					//Int
-					try
+                    //Attempt to find correct type
+                    //Int
+                    try
 					{
 						int raw_value = Int32.Parse(value);
 						values.Add(new JsonValue<int>(raw_value));
@@ -131,28 +131,28 @@ namespace VScript_Core.Graphing.Json
 						continue;
 					}
 					catch (FormatException) { }
-
-					//String
-					if (value.StartsWith("\""))
-					{
-						string corrected_string = value.Substring(1).Substring(0, value.Length - 2);
-						values.Add(new JsonValue<string>(corrected_string));
-						continue;
-					}
+                    
+                    //String
+                    if (value.StartsWith("\""))
+                    {
+                        string corrected_string = value.Substring(1).Substring(0, value.Length - 2);
+                        values.Add(new JsonValue<string>(corrected_string));
+                        continue;
+                    }
 
 					//Unknown type, if here
 				}
 
-				if (c == '\r')
-					continue;
+                if (c == '\r')
+                    continue;
 
-				if (c == '"')
-					reading_string = !reading_string;
+                if (c == '"')
+                    reading_string = !reading_string;
 
-				if (!reading_string && (c == '\n' || c == '\t' || c == '\r'))
-					continue;
-				
-				current_value += c;
+                if (!reading_string && (c == '\n' || c == '\t' || c == '\r'))
+                    continue;
+
+                current_value += c;
 			}
 		}
 
