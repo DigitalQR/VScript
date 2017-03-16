@@ -33,7 +33,7 @@ namespace VScript_Core
 			//Get full file path (Correct relative file paths)
 			String full_path = file_name;
 			if (file_name.Length >= 1 && file_name[1] != ':')
-				full_path = SystemConsole.GetWorkingDirectory() + file_name;
+				full_path = SystemConsole.GetWorkingDirectory() + "/" + file_name;
 
 
 			//Setup input lambda

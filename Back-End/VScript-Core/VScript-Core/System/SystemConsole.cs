@@ -17,12 +17,7 @@ namespace VScript_Core.System
 		*/
 		public static String GetWorkingDirectory()
 		{
-		#if DEBUG
-			//Use project root directory, if building for debug
-			return Directory.GetCurrentDirectory() + "\\..\\..";
-		#else
 			return Directory.GetCurrentDirectory();
-		#endif
 		}
 
 		public delegate void InputFunction(StreamWriter writer);

@@ -34,12 +34,15 @@ namespace VScript_Testing
             */
             //graph.Export();
             graph.Import();
-            Logger.Log(graph.ToString());
 
 
-            Compiler.main.Compile(graph);
+            string path = Compiler.main.Compile(graph);
+            PythonProgram program = new PythonProgram(path);
+            PythonProgram.python_path = "C:/Python35-32/python.exe";
+            program.Run("", true);
 
-			Logger.Log("Done");
+
+            Logger.Log("Done");
 			Console.ReadLine();
 		}
 	}

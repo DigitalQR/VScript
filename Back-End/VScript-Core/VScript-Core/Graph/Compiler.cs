@@ -170,14 +170,15 @@ namespace VScript_Core.Graph
 		}
 
 		public string Compile(Graph graph)
-		{
-			Logger.Log("Starting Compile..");
-			Logger.DebugLog("\n===\n" + Expand(graph.start_node) + "\n===");
-			//string str = "\tA\n\tB\n\t\tC";
-			//Logger.DebugLog("\n===\n" + str + "\n===\n" + GetCorrectedSource(str, 0));
+        {
+            Logger.DebugLog("Starting Compile..");
+            string build_path = "Build/" + graph.name + ".py";
+            Logger.DebugLog("Building to '" + build_path + "'");
 
-			Logger.Log("Finished Compile!");
-			return "";
+            Directory.CreateDirectory(build_path.Substring(0, build_path.LastIndexOf("/")));
+            File.WriteAllText(build_path, Expand(graph.start_node));
+			Logger.DebugLog("Finished Compile!");
+			return build_path;
 		}
 	}
 }
