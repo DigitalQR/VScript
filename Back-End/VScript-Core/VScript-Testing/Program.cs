@@ -23,28 +23,21 @@ namespace VScript_Testing
 
 
 			Graph graph = new Graph("Test");
+            /*
+            GraphNode print_node = graph.AddNode(1, 2);
+            GraphNode true_node = graph.AddNode(0, 2);
+            
+            graph.AddConnection(graph.start_node, "end", print_node, "begin");
+            graph.AddConnection(true_node, "end", print_node, "message");
 
-			GraphNode true_node = new GraphNode(0, 2);
-			GraphNode false_node = new GraphNode(0, 3);
+            graph.RemoveConnection(true_node, "endE", print_node, "message");
+            */
+            //graph.Export();
+            graph.Import();
+            Logger.Log(graph.ToString());
 
-			GraphNode if_node = new GraphNode(1, 1);
-			GraphNode if_node2 = new GraphNode(1, 1);
 
-			GraphNode print_true = new GraphNode(1, 2);
-			GraphNode print_false = new GraphNode(1, 2);
-
-			print_true.inputs.Add("message", true_node);
-			print_false.inputs.Add("message", false_node);
-
-			if_node.inputs.Add("condition", true_node);
-			if_node.outputs.Add("true", print_true);
-			if_node.outputs.Add("false", print_false);
-			
-			graph.root_node.outputs.Add("end", if_node);
-
-			graph.Export();
-
-			Compiler.main.Compile(graph);
+            Compiler.main.Compile(graph);
 
 			Logger.Log("Done");
 			Console.ReadLine();

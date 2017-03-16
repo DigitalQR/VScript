@@ -172,7 +172,7 @@ namespace VScript_Core.Graph
 		public string Compile(Graph graph)
 		{
 			Logger.Log("Starting Compile..");
-			Logger.DebugLog("\n===\n" + Expand(graph.root_node) + "\n===");
+			Logger.DebugLog("\n===\n" + Expand(graph.start_node) + "\n===");
 			//string str = "\tA\n\tB\n\t\tC";
 			//Logger.DebugLog("\n===\n" + str + "\n===\n" + GetCorrectedSource(str, 0));
 
