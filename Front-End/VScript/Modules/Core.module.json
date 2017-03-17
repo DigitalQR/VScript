@@ -4,17 +4,25 @@
 	"module_dep": [],
 	"file_dep": [],
 	"nodes": [
+	"Core/Print",
+	
+	"Core/Input",
+	"Core/Set Variable",
+	"Core/Get Variable",
+	"Core/Constant Value",
+	"Core/Cast",
+	
 	"Core/If",
 	"Core/If-Then",
 	"Core/While",
-	"Core/Print",
-	"Core/Input",
+	
+	"Core/Add",
+	"Core/Subtract",
+	"Core/Multiply",
+	"Core/Divide",
+	
 	"Core/True",
 	"Core/False",
-	"Core/Concatenate",
-	"Core/Constant Value",
-	"Core/Set Variable",
-	"Core/Get Variable",
 	"Core/Equal",
 	"Core/Less Than",
 	"Core/Less Than Or Equal",
@@ -22,10 +30,6 @@
 	"Core/Greater Than Or Equal",
 	"Core/And",
 	"Core/Or",
-	"Core/Not",
-	"Core/Cast",
-	"Core/Add",
-	"Core/Subtract",
-	"Core/Multiply",
-	"Core/Divide"]
+	"Core/Not"
+	]
 }
