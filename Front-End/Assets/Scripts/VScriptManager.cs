@@ -54,15 +54,21 @@ public class VScriptManager : MonoBehaviour {
 
 		CurrentGraph = VScriptEngine.GetGraph(name);
 
+		Vector2 desired_position = new Vector2();
+
 		//Create all the nodes
 		foreach (KeyValuePair<System.Guid, GraphNode> pair in CurrentGraph.nodes)
 		{
 			NodeDescription new_node = Instantiate(NodeObject);
 			new_node.SetReferenceNode(pair.Value);
 			CurrentGraphNodes.Add(pair.Key, new_node);
+
+			//If start node
+			if (pair.Value.module_id == 0 && pair.Value.node_id == 1)
+				desired_position = new_node.transform.position;
         }
 
-        Camera.main.transform.position = new Vector3(0, 0, -8.26f);
+        Camera.main.transform.position = new Vector3(desired_position.x, desired_position.y - 2.0f, -8.26f);
     }
 
 	public void SaveGraph()
