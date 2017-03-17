@@ -63,7 +63,7 @@ namespace VScript_Core.Graphing
 
 			//Const Value node
 			{
-				Node node = new Node("Const Value");
+				Node node = new Node("Constant Value");
 				node.use_value = true;
                 node.id = 2;
                 node.colour_r = 1.0f;
@@ -100,7 +100,6 @@ namespace VScript_Core.Graphing
                 }
 			}
 		}
-
 
         public void LoadModule(string folder, string name)
 		{
@@ -151,5 +150,21 @@ namespace VScript_Core.Graphing
 			return module_nodes[module_id][node_id];
 		}
 
+		public List<Node> Search(string keyword)
+		{
+			keyword = keyword.ToLower();
+            List<Node> nodes = new List<Node>();
+
+			foreach (KeyValuePair<int, Dictionary<int, Node>> module in module_nodes)
+				foreach (KeyValuePair<int, Node> node_info in module.Value)
+				{
+					string node_name = node_info.Value.name.ToLower();
+
+					if (node_name.Contains(keyword) || keyword.Contains(node_name))
+						nodes.Add(node_info.Value);
+                }
+
+			return nodes;
+		}
 	}
 }

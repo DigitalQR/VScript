@@ -31,7 +31,6 @@ namespace VScript_Testing
             graph.Clear();
             graph.AddNode(0, 1);
 
-
             GraphNode const_msg = graph.AddNode(0, 2);
             const_msg.meta_data.Put("value", "\"Hard coded msg\"");
 			
