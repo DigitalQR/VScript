@@ -54,7 +54,7 @@ public class NodeDescription : MonoBehaviour {
 		in_socket.ConnectedSocket = out_socket;
 	}
 
-	void Rebuild()
+	public void Rebuild()
 	{
 		Node node = Library.main.GetNode(ReferenceNode);
 		name = node.name;
@@ -81,7 +81,7 @@ public class NodeDescription : MonoBehaviour {
 		SetOutputs(outputs_io);
 	}
 
-	void Rewire()
+	public void Rewire()
 	{
         foreach (KeyValuePair<string, System.Guid> node_desc in ReferenceNode.inputs)
 		{
