@@ -8,9 +8,11 @@ public class NodeDescription : MonoBehaviour {
 	
 	public GraphNode ReferenceNode { get; private set; }
 
-	[SerializeField]
-	private TextMesh HeaderText;
-	[SerializeField]
+    [SerializeField]
+    private TextMesh HeaderText;
+    [SerializeField]
+    private TextMesh DescriptionText;
+    [SerializeField]
 	private SpriteRenderer HeaderBar;
 	[SerializeField]
 	private GameObject ResizableBody;
@@ -57,7 +59,13 @@ public class NodeDescription : MonoBehaviour {
 		Node node = Library.main.GetNode(ReferenceNode);
 		name = node.name;
 
-		HeaderText.text = node.name;
+        //Is const input node
+        if (ReferenceNode.module_id == 0 && ReferenceNode.node_id == 2)
+            DescriptionText.text = ReferenceNode.meta_data.Get<string>("value");
+        else
+            DescriptionText.text = "";
+
+        HeaderText.text = node.name;
 		HeaderText.color = Color.white;
 		
 		HeaderBar.color = new Color(node.colour_r, node.colour_g, node.colour_b);

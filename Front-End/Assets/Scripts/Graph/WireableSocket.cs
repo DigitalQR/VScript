@@ -9,6 +9,7 @@ public class WireableSocket : SocketDescription {
 	private LineRenderer LineRenderer;
 
 	private bool DraggingWire;
+	private int WireResolution = 3;
 	public WireableSocket ConnectedSocket;
 
 	private static Vector2 GetMouseLocation()
@@ -20,7 +21,7 @@ public class WireableSocket : SocketDescription {
 	void Start ()
 	{
 		LineRenderer = GetComponent<LineRenderer>();
-		LineRenderer.numPositions = 2;
+		WireResolution = LineRenderer.numPositions;
 		LineRenderer.sortingOrder = 10;
     }
 	
@@ -29,25 +30,53 @@ public class WireableSocket : SocketDescription {
 		DrawWire();
     }
 
+	Vector3 GetBezierPosition(Vector3 start, Vector3 end, float t)
+	{
+		Vector3 p0 = start;
+		Vector3 p1 = p0 + new Vector3(1, 0, 0);
+		Vector3 p3 = end;
+		Vector3 p2 = p3 + new Vector3(-1, 0, 0);
+		return Mathf.Pow(1f - t, 3f) * p0 + 3f * Mathf.Pow(1f - t, 2f) * t * p1 + 3f * (1f - t) * Mathf.Pow(t, 2f) * p2 + Mathf.Pow(t, 3f) * p3;
+	}
+
 	void DrawWire()
 	{
-		if (ConnectedSocket != null)
+		if ((ConnectedSocket != null && SocketIOType == IOType.Output) || DraggingWire)
 		{
 			LineRenderer.enabled = true;
-			LineRenderer.SetPosition(0, transform.position);
-			LineRenderer.SetPosition(1, ConnectedSocket.transform.position);
+			Vector3 start_position = transform.position;
+			Vector3 end_position;
+			
+			//Set colour and desired end position
+			if (ConnectedSocket != null)
+			{
+				end_position = ConnectedSocket.transform.position;
+				LineRenderer.startColor = SocketColour;
+				LineRenderer.endColor = ConnectedSocket.SocketColour;
+			}
+			else
+			{
+				LineRenderer.startColor = SocketColour;
+				LineRenderer.endColor = SocketColour;
 
-			LineRenderer.startColor = SocketColour;
-			LineRenderer.endColor = ConnectedSocket.SocketColour;
-		}
-		else if (DraggingWire)
-		{
-			LineRenderer.enabled = true;
-			LineRenderer.SetPosition(0, transform.position);
-			LineRenderer.SetPosition(1, GetMouseLocation());
+				//Switch positions if dragging wire for input
+				if (SocketIOType == IOType.Input)
+				{
+					end_position = start_position;
+					start_position = GetMouseLocation();
+				}
+				else
+					end_position = GetMouseLocation();
+			}
 
-			LineRenderer.startColor = SocketColour;
-			LineRenderer.endColor = SocketColour;
+			LineRenderer.SetPosition(0, start_position);
+			LineRenderer.SetPosition(WireResolution - 1, end_position);
+
+			for (int i = 1; i < WireResolution-1; i++) 
+			{
+				float v = (float)(i) / (float)(WireResolution - 1);
+				LineRenderer.SetPosition(i, GetBezierPosition(start_position + new Vector3(0.1f, 0, 0), end_position + new Vector3(-0.1f, 0, 0), v));
+			}
 		}
 		else
 			LineRenderer.enabled = false;
