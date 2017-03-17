@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using System.Diagnostics;
 using System.IO;
@@ -31,23 +30,26 @@ namespace VScript_Core.System
                 process.Start();
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
+				
+				if (input_function != null)
+				{
+					using (StreamWriter writer = process.StandardInput)
+					{
+						while (!process.HasExited)
+						{
+							string input = input_function();
 
-                using (StreamWriter writer = process.StandardInput)
-                {
-                    while (!process.HasExited)
-                    {
-                        string input = input_function != null ? input_function() : "";
-
-                        if (input != "")
-                        {
-                            writer.WriteLine(input);
-                        }
-                    }   
-                }
+							if (input != "")
+							{
+								writer.WriteLine(input);
+							}
+						}
+					}
+				}
             }
             catch (Win32Exception exception)
             {
-                Logger.LogError("Output:\n" + exception.ToString());
+                VSLogger.LogError("Output:\n" + exception.ToString());
             }
 
             return process;
@@ -71,7 +73,7 @@ namespace VScript_Core.System
             process.OutputDataReceived += (sender, arg) =>
             {
                 if (arg != null && arg.Data != null)
-                    Logger.Log(arg.Data.ToString());
+                    VSLogger.Log(arg.Data.ToString());
             };
 
             //Register error output
@@ -83,7 +85,7 @@ namespace VScript_Core.System
 
                 if (error != null && error.Length != 0)
                 {
-                    Logger.LogError(error);
+                    VSLogger.LogError(error);
                 }
             };
 

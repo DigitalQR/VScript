@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace VScript_Core.Graphing
@@ -53,7 +52,10 @@ namespace VScript_Core.Graphing
                 NodeIO output = new NodeIO();
                 output.name = "end";
                 output.display_name = "";
-                output.is_execution = true;
+				output.colour_r = 1.0f;
+				output.colour_g = 1.0f;
+				output.colour_b = 1.0f;
+				output.is_execution = true;
 
                 start_node.outputs.Add(output);
                 default_nodes.Add(1, start_node);
@@ -72,7 +74,10 @@ namespace VScript_Core.Graphing
                 NodeIO output = new NodeIO();
                 output.name = "end";
                 output.display_name = "";
-                output.is_execution = false;
+				output.colour_r = 1.0f;
+				output.colour_g = 1.0f;
+				output.colour_b = 1.0f;
+				output.is_execution = false;
 
                 node.outputs.Add(output);
                 default_nodes.Add(2, node);
@@ -103,7 +108,7 @@ namespace VScript_Core.Graphing
 
 			if (module_nodes.ContainsKey(module.id))
 			{
-				Logger.LogError("Cannot load module '" + name + "':" + module.id + " as module with same id already exists");
+				VSLogger.LogError("Cannot load module '" + name + "':" + module.id + " as module with same id already exists");
 				return;
 			}
 
@@ -117,14 +122,14 @@ namespace VScript_Core.Graphing
 
 				if (nodes.ContainsKey(node.id))
 				{
-					Logger.LogError("Cannot load node '" + node_name + "':" + node.id + " in module '" + name + "' as node with same id already exists");
+					VSLogger.LogError("Cannot load node '" + node_name + "':" + node.id + " in module '" + name + "' as node with same id already exists");
 					continue;
 				}
 				nodes.Add(node.id, node);
 			}
 
 			module_nodes.Add(module.id, nodes);
-			Logger.Log("Loaded module '" + name + "':" + module.id + " with " + nodes.Count + " nodes");
+			VSLogger.Log("Loaded module '" + name + "':" + module.id + " with " + nodes.Count + " nodes");
         }
 
         public Node GetNode(GraphNode node_meta)
@@ -140,7 +145,7 @@ namespace VScript_Core.Graphing
 			return GetNode(node_meta.module_id, node_meta.node_id);
         }
 
-        private Node GetNode(int module_id, int node_id)
+        public Node GetNode(int module_id, int node_id)
 		{
 			return module_nodes[module_id][node_id];
 		}

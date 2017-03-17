@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 using VScript_Core.Graphing.Json;
@@ -54,7 +53,7 @@ namespace VScript_Core.Graphing
 			}
 			catch (FileNotFoundException)
 			{
-				Logger.LogError("Unable to import '" + name + extention + "'");
+				VSLogger.LogError("Unable to import '" + name + extention + "'");
 			}
 		}
 

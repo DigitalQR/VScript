@@ -2,16 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NodeDescription : MonoBehaviour {
+using VScript_Core.Graphing;
 
-	[System.Serializable]
-	public struct NodeIO
-	{
-		public string Name;
-		public Color NameColour;
-		public Color SocketColour;
-		public SocketDescription.SocketType ExectutionType;
-	}
+public class NodeDescription : MonoBehaviour {
+	
+	public GraphNode ReferenceNode { get; private set; }
 
 	[SerializeField]
 	private TextMesh HeaderText;
@@ -21,82 +16,159 @@ public class NodeDescription : MonoBehaviour {
 	private GameObject ResizableBody;
 
 	[SerializeField]
-	private SocketDescription DefaultSocket;
-	private List<SocketDescription> Inputs;
-	private List<SocketDescription> Outputs;
+	private WireableSocket DefaultSocket;
+	private Dictionary<string, WireableSocket> Inputs;
+	private Dictionary<string, WireableSocket> Outputs;
 	private const float ConnectionLocation = 1.564f;
 	private const float ConnectionSpacing = 0.296f;
 
 
-	public void SetHeaderText(string header)
+	public void SetReferenceNode(GraphNode node)
 	{
-		HeaderText.text = header;
+		ReferenceNode = node;
+		transform.position = new Vector3(
+			ReferenceNode.meta_data.Get<float>("transform_x"),
+            ReferenceNode.meta_data.Get<float>("transform_y"),
+            ReferenceNode.meta_data.Get<float>("transform_z")
+		);
+
+		Rebuild();
+		Rewire();
+    }
+
+	public void PreSave()
+	{
+		ReferenceNode.meta_data.Put("transform_x", transform.position.x);
+		ReferenceNode.meta_data.Put("transform_y", transform.position.y);
+		ReferenceNode.meta_data.Put("transform_z", transform.position.z);
 	}
 
-	public void SetHeaderColour(Color colour)
+	public static void AddConnection(NodeDescription out_node, string out_key, NodeDescription in_node, string in_key)
 	{
-		HeaderBar.color = colour;
+		WireableSocket out_socket = out_node.Outputs[out_key];
+		WireableSocket in_socket = in_node.Inputs[in_key];
+
+		out_socket.ConnectedSocket = in_socket;
+		in_socket.ConnectedSocket = out_socket;
 	}
 
-	public void SetHeaderFontSize(float size)
+	void Rebuild()
 	{
-		HeaderText.characterSize = size * 0.03f;
+		Node node = Library.main.GetNode(ReferenceNode);
+		name = node.name;
+
+		HeaderText.text = node.name;
+		HeaderText.color = Color.white;
+		
+		HeaderBar.color = new Color(node.colour_r, node.colour_g, node.colour_b);
+
+		List<NodeIO> inputs_io = new List<NodeIO>();
+		foreach (NodeIO node_io in node.inputs)
+			inputs_io.Add(node_io);
+		SetInputs(inputs_io);
+
+		List<NodeIO> outputs_io = new List<NodeIO>();
+		foreach (NodeIO node_io in node.outputs)
+			outputs_io.Add(node_io);
+		SetOutputs(outputs_io);
 	}
 
-	public void SetHeaderFontColour(Color colour)
+	void Rewire()
 	{
-		HeaderText.color = colour;
+        foreach (KeyValuePair<string, System.Guid> node_desc in ReferenceNode.inputs)
+		{
+			try
+			{
+				NodeDescription other_node = VScriptManager.main.GetNode(node_desc.Value);
+				string other_name = "";
+
+				foreach (KeyValuePair<string, System.Guid> other_node_desc in other_node.ReferenceNode.outputs)
+				{
+					if (other_node_desc.Value == ReferenceNode.guid)
+					{
+						other_name = other_node_desc.Key;
+						break;
+					}
+				}
+
+				AddConnection(other_node, other_name, this, node_desc.Key);
+			}
+			catch (KeyNotFoundException) { };
+		}
+
+		foreach (KeyValuePair<string, System.Guid> node_desc in ReferenceNode.outputs)
+		{
+			try
+			{
+				NodeDescription other_node = VScriptManager.main.GetNode(node_desc.Value);
+				string other_name = "";
+
+				foreach (KeyValuePair<string, System.Guid> other_node_desc in other_node.ReferenceNode.inputs)
+				{
+					if (other_node_desc.Value == ReferenceNode.guid)
+					{
+						other_name = other_node_desc.Key;
+						break;
+					}
+				}
+
+				AddConnection(this, node_desc.Key, other_node, other_name);
+			}
+			catch (KeyNotFoundException) { };
+		}
 	}
 
-	public void SetInputs(NodeIO[] inputs)
+	private void SetInputs(List<NodeIO> inputs)
 	{
 		if (Inputs != null)
 		{
 			//Remove existing sockets
-			foreach (SocketDescription socket in Inputs)
-				Destroy(socket.gameObject);
+			foreach (KeyValuePair<string, WireableSocket> socket in Inputs)
+				Destroy(socket.Value.gameObject);
 			Inputs.Clear();
 		}
 		else
-			Inputs = new List<SocketDescription>();
+			Inputs = new Dictionary<string, WireableSocket>();
 
 		int i = 0;
-
+		
 		//Spawn new sockets
 		foreach (NodeIO input in inputs)
 		{
 			GameObject socket = Instantiate(DefaultSocket.gameObject, transform);
 
 			//Setup socket
-			SocketDescription socket_desc = socket.GetComponent<SocketDescription>();
-			socket_desc.SetName(input.Name);
-			socket_desc.SetNameColour(input.NameColour);
-			socket_desc.SetSocketColour(input.SocketColour);
-			socket_desc.SetSocketType(input.ExectutionType);
+			WireableSocket socket_desc = socket.GetComponent<WireableSocket>();
+			socket_desc.ParentNode = this;
+			socket_desc.name = input.name;
+			socket_desc.SetName(input.display_name);
+			socket_desc.SetNameColour(Color.black);
+			socket_desc.SetSocketColour(new Color(input.colour_r, input.colour_g, input.colour_b));
+			socket_desc.SetSocketType(input.is_execution ? SocketDescription.SocketType.Execution : SocketDescription.SocketType.Variable);
 			socket_desc.SetIOType(SocketDescription.IOType.Input);
 
 			socket.transform.localPosition = new Vector2(
 				-ConnectionLocation,
-				- 0.414f - ConnectionSpacing * i
+				-0.414f - ConnectionSpacing * i
 				);
 
-			Inputs.Add(socket_desc);
+			Inputs.Add(input.name, socket_desc);
 			i++;
-        }
+		}
 		CheckNodeSize();
     }
 
-	public void SetOutputs(NodeIO[] outputs)
+	private void SetOutputs(List<NodeIO>outputs)
 	{
 		if (Outputs != null)
 		{
 			//Remove existing sockets
-			foreach (SocketDescription socket in Outputs)
-				Destroy(socket.gameObject);
+			foreach (KeyValuePair<string, WireableSocket> socket in Outputs)
+				Destroy(socket.Value.gameObject);
 			Outputs.Clear();
 		}
 		else
-			Outputs = new List<SocketDescription>();
+			Outputs = new Dictionary<string, WireableSocket>();
 
 		int i = 0;
 
@@ -106,11 +178,13 @@ public class NodeDescription : MonoBehaviour {
 			GameObject socket = Instantiate(DefaultSocket.gameObject, transform);
 
 			//Setup socket
-			SocketDescription socket_desc = socket.GetComponent<SocketDescription>();
-			socket_desc.SetName(output.Name);
-			socket_desc.SetNameColour(output.NameColour);
-			socket_desc.SetSocketColour(output.SocketColour);
-			socket_desc.SetSocketType(output.ExectutionType);
+			WireableSocket socket_desc = socket.GetComponent<WireableSocket>();
+			socket_desc.ParentNode = this;
+			socket_desc.name = output.name;
+            socket_desc.SetName(output.display_name);
+			socket_desc.SetNameColour(Color.black);
+			socket_desc.SetSocketColour(new Color(output.colour_r, output.colour_g, output.colour_b));
+			socket_desc.SetSocketType(output.is_execution ? SocketDescription.SocketType.Execution : SocketDescription.SocketType.Variable);
 			socket_desc.SetIOType(SocketDescription.IOType.Output);
 
 			socket.transform.localPosition = new Vector2(
@@ -118,7 +192,7 @@ public class NodeDescription : MonoBehaviour {
 				-0.414f - ConnectionSpacing * i
 				);
 
-			Outputs.Add(socket_desc);
+			Outputs.Add(output.name, socket_desc);
 			i++;
 		}
 		CheckNodeSize();

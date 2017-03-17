@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace VScript_Core.Graphing
@@ -177,13 +176,13 @@ namespace VScript_Core.Graphing
 		public string Compile(Graph graph)
         {
             string graph_path = build_path + graph.display_name + ".py";
-            Logger.DebugLog("Starting Compile '" + graph_path + "'");
+            VSLogger.DebugLog("Starting Compile '" + graph_path + "'");
 
             Directory.CreateDirectory(build_path);
             string source = Expand(graph.start_node);
             File.WriteAllText(graph_path, source);
-            Logger.DebugLog("\n==Source-start==\n" + source + "\n===Source-end===");
-            Logger.DebugLog("Finished Compile!");
+            VSLogger.DebugLog("\n==Source-start==\n" + source + "\n===Source-end===");
+            VSLogger.DebugLog("Finished Compile!");
 			return graph_path;
 		}
 	}

@@ -10,13 +10,12 @@ public class ConsoleOutputListener : MonoBehaviour {
 	[SerializeField]
 	private Scrollbar scrollbar;
 
+	private bool need_refresh = false;
 	private string[] buffer = new string[256];
 	int line_index = 0;
 
-
 	void Start ()
 	{
-		Print("~Program Output~");
     }
 
 	public void Print(string line)
@@ -33,7 +32,16 @@ public class ConsoleOutputListener : MonoBehaviour {
 		Debug.Log(line);
 	}
 
-	public void RefreshVisuals()
+	void Update()
+	{
+		if (need_refresh)
+		{
+			Refresh();
+			need_refresh = false;
+        }
+	}
+
+	private void Refresh()
 	{
 		string display_string = "";
 
@@ -43,7 +51,7 @@ public class ConsoleOutputListener : MonoBehaviour {
 
 			if (index < 0)
 				index += buffer.Length;
-			
+
 			string current_line = buffer[index];
 
 			if (current_line == null || current_line == "")
@@ -55,7 +63,12 @@ public class ConsoleOutputListener : MonoBehaviour {
 				display_string = current_line + "\n" + display_string;
 		}
 
-		text.text = display_string + "\n";
-		scrollbar.value = 0;
+		text.text = display_string + "\n\n";
+		scrollbar.value = -0.1f;
+	}
+
+	public void RefreshVisuals()
+	{
+		need_refresh = true;
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 using VScript_Core.Graphing.Json;
@@ -91,9 +90,9 @@ namespace VScript_Core.Graphing
 				id = json.Get<int>("id");
 				source = json.Get<string>("source");
 
-				colour_r = json.Get<float>("colour_r");
-				colour_g = json.Get<float>("colour_g");
-				colour_b = json.Get<float>("colour_b");
+				colour_r = json.Get<float>("colour_r", json.Get<int>("colour_r"));
+				colour_g = json.Get<float>("colour_g", json.Get<int>("colour_g"));
+				colour_b = json.Get<float>("colour_b", json.Get<int>("colour_b"));
 
 				foreach (JsonObject input_json in json.GetObjectList("inputs"))
 				{
@@ -102,10 +101,10 @@ namespace VScript_Core.Graphing
 					input.display_name = input_json.Get<string>("display_name", input.name);
 					input.is_execution = input_json.Get<bool>("is_execution");
 
-					input.colour_r = input_json.Get<float>("colour_r", 1);
-					input.colour_g = input_json.Get<float>("colour_g", 1);
-					input.colour_b = input_json.Get<float>("colour_b", 1);
-
+					input.colour_r = input_json.Get<float>("colour_r", input_json.Get<int>("colour_r"));
+					input.colour_g = input_json.Get<float>("colour_g", input_json.Get<int>("colour_g"));
+					input.colour_b = input_json.Get<float>("colour_b", input_json.Get<int>("colour_b"));
+					
 					inputs.Add(input);
 				}
 
@@ -116,16 +115,16 @@ namespace VScript_Core.Graphing
 					output.display_name = output_json.Get<string>("display_name", output.name);
 					output.is_execution = output_json.Get<bool>("is_execution");
 
-					output.colour_r = output_json.Get<float>("colour_r", 1);
-					output.colour_g = output_json.Get<float>("colour_g", 1);
-					output.colour_b = output_json.Get<float>("colour_b", 1);
+					output.colour_r = output_json.Get<float>("colour_r", output_json.Get<int>("colour_r"));
+					output.colour_g = output_json.Get<float>("colour_g", output_json.Get<int>("colour_g"));
+					output.colour_b = output_json.Get<float>("colour_b", output_json.Get<int>("colour_b"));
 
 					outputs.Add(output);
 				}
 			}
 			catch (FileNotFoundException)
 			{
-				Logger.LogError("Unable to import '" + name + extention + "'");
+				VSLogger.LogError("Unable to import '" + name + extention + "'");
 			}
 		}
 
