@@ -22,12 +22,13 @@ namespace VScript_Testing
 			VSLogger.std_print = Print;
 			VSLogger.debug_print = Print;
 			VSLogger.error_print = Print;
-			
 
-			VScriptEngine.engine_directory = "../../VScript/";
+
+			VScriptEngine.input_function = delegate () { return Encoding.ASCII.GetBytes("Test"); };
+            VScriptEngine.engine_directory = "../../VScript/";
 			VScriptEngine.Init();
-            Graph graph = VScriptEngine.GetGraph("Example");
-            
+            Graph graph = VScriptEngine.GetGraph("Example");    
+			/*       
             graph.Clear();
             graph.AddNode(0, 1);
 
@@ -48,7 +49,7 @@ namespace VScript_Testing
 			graph.AddConnection(graph.start_node, "end", print_true, "begin");
 			graph.AddConnection(print_true, "end", print_false, "begin");
 			graph.AddConnection(print_false, "end", print_msg, "begin");
-
+			*/
 			//graph.AddConnection(if_then, "true", print_true, "begin");
 			//graph.AddConnection(if_then, "false", print_false, "begin");
 

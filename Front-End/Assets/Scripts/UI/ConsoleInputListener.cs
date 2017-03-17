@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using System.Text;
+
 public class ConsoleInputListener : MonoBehaviour {
 
 	[SerializeField]
@@ -24,10 +26,10 @@ public class ConsoleInputListener : MonoBehaviour {
 	{
 		next_input = "";
     }
-	public string ReadInput()
+	public byte[] ReadInput()
 	{
 		string input = next_input;
 		next_input = "";
-        return input;
+		return Encoding.Convert(Encoding.UTF8, Encoding.ASCII, Encoding.UTF8.GetBytes(input));
     }
 }

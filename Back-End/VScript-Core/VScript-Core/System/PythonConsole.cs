@@ -14,7 +14,7 @@ namespace VScript_Core.System
     public class PythonConsole
     {        
         public static String exe_path = "C:/Python34/python.exe";
-        public delegate string ReadInput();
+        public delegate byte[] ReadInput();
 
         public static Process CompileAndRun(Graph graph, ReadInput input_function)
         {
@@ -33,16 +33,16 @@ namespace VScript_Core.System
 				
 				if (input_function != null)
 				{
-					using (StreamWriter writer = process.StandardInput)
+					using (StreamWriter writer = new StreamWriter(process.StandardInput.BaseStream, Encoding.ASCII))
 					{
 						while (!process.HasExited)
 						{
-							string input = input_function();
+							byte[] input = input_function();
 
-							if (input != "")
-							{
-								writer.WriteLine(input);
-							}
+							if (input != null && input.Length != 0)
+								writer.WriteLine(Encoding.ASCII.GetString(input));
+							else
+								writer.Flush();
 						}
 					}
 				}
