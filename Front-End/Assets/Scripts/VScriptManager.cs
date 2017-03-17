@@ -16,6 +16,8 @@ public class VScriptManager : MonoBehaviour {
 	private ConsoleOutputListener ConsoleOutput;
 	[SerializeField]
 	private ConsoleInputListener ConsoleInput;
+	[SerializeField]
+	private GameObject GraphSheild;
 
 	public Graph CurrentGraph { get; private set; }
 	private Thread ExecutionThread;
@@ -27,6 +29,7 @@ public class VScriptManager : MonoBehaviour {
 			return;
 		else
 			main = this;
+		GraphSheild.SetActive(true);
 
 		VSLogger.stamp_time = false;
         VSLogger.std_print = StdPrint;
@@ -75,7 +78,7 @@ public class VScriptManager : MonoBehaviour {
 			if (pair.Value.module_id == 0 && pair.Value.node_id == 1)
 				desired_position = new_node.transform.position;
         }
-
+		GraphSheild.SetActive(false);
         Camera.main.transform.position = new Vector3(desired_position.x, desired_position.y - 2.0f, -8.26f);
     }
 
@@ -106,6 +109,7 @@ public class VScriptManager : MonoBehaviour {
 			ExecutionThread.Abort();
 			ExecutionThread = null;
         }
+		GraphSheild.SetActive(true);
     }
 
 	public void ExecuteGraph()
