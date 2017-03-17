@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace VScript_Core.Graphing.Json
 {
@@ -118,7 +117,7 @@ namespace VScript_Core.Graphing.Json
 					try
 					{
 						double raw_value = double.Parse(value);
-						values.Add(new JsonValue<double>(raw_value));
+						values.Add(new JsonValue<float>((float)raw_value));
 						continue;
 					}
 					catch (FormatException) { }

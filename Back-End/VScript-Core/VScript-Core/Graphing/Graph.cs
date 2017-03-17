@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 using VScript_Core.Graphing.Json;
@@ -113,7 +112,7 @@ namespace VScript_Core.Graphing
 
         public string display_name { get; private set; }
         public GraphNode start_node { get; private set; }
-        private Dictionary<Guid, GraphNode> nodes;
+        public Dictionary<Guid, GraphNode> nodes;
 
 		public Graph(string name)
 		{
@@ -171,7 +170,7 @@ namespace VScript_Core.Graphing
                 in_node.inputs.Remove(in_key);
             }
             else
-                Logger.LogError("Attempting to remove invalid connection between '" + out_node.module_id + ":" + out_node.node_id + "' and '" + in_node.module_id + ":" + in_node.node_id + "'");
+                VSLogger.LogError("Attempting to remove invalid connection between '" + out_node.module_id + ":" + out_node.node_id + "' and '" + in_node.module_id + ":" + in_node.node_id + "'");
         }
 
         public GraphNode GetNode(Guid guid)
