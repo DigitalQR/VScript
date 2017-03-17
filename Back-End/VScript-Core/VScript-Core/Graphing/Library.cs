@@ -61,13 +61,13 @@ namespace VScript_Core.Graphing
                 default_nodes.Add(1, start_node);
             }
 
-            //String node
-            {
-                Node node = new Node("Const Input");
+			//Const Value node
+			{
+				Node node = new Node("Const Value");
                 node.id = 2;
-                node.colour_r = 0.1f;
-                node.colour_g = 0.1f;
-                node.colour_b = 1.0f;
+                node.colour_r = 1.0f;
+                node.colour_g = 1.0f;
+                node.colour_b = 0.0f;
 
                 node.source = "None{vo:end}";
 

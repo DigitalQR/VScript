@@ -21,6 +21,7 @@ namespace VScript_Core.Graphing.Json
 			//Parse raw array
 			int bracket_count = -1;
 			bool reading_string = false;
+			char last_char = '\0';
 
 			bool reading_sub_object = false;
 			bool reading_sub_array = false;
@@ -94,64 +95,70 @@ namespace VScript_Core.Graphing.Json
 						just_read_sub_struct = true;
 						continue;
 					}
-				}
 
+
+					//Found key value pair
+					if (c == ',' || bracket_count == -1)
+					{
+						string value = current_value;
+						current_value = "";
+
+						//Attempt to find correct type
+						//Int
+						try
+						{
+							int raw_value = Int32.Parse(value);
+							values.Add(new JsonValue<int>(raw_value));
+							continue;
+						}
+						catch (FormatException) { }
+
+						//Double
+						try
+						{
+							double raw_value = double.Parse(value);
+							values.Add(new JsonValue<float>((float)raw_value));
+							continue;
+						}
+						catch (FormatException) { }
+
+						//Bool
+						try
+						{
+							bool raw_value = bool.Parse(value);
+							values.Add(new JsonValue<bool>(raw_value));
+							continue;
+						}
+						catch (FormatException) { }
+
+						//String
+						if (value.StartsWith("\""))
+						{
+							string corrected_string = value.Substring(1).Substring(0, value.Length - 2);
+							values.Add(new JsonValue<string>(corrected_string));
+							continue;
+						}
+
+						//Unknown type, if here
+					}
+				}
 				
-				//Found key value pair
-				if (c == ',' || bracket_count == -1)
-				{
-					string value = current_value;
-					current_value = "";
+				if (c == '\r')
+					continue;
 
-                    //Attempt to find correct type
-                    //Int
-                    try
-					{
-						int raw_value = Int32.Parse(value);
-						values.Add(new JsonValue<int>(raw_value));
-						continue;
-					}
-					catch (FormatException) { }
+				if (c == '"' && last_char != '\\')
+					reading_string = !reading_string;
 
-					//Double
-					try
-					{
-						double raw_value = double.Parse(value);
-						values.Add(new JsonValue<float>((float)raw_value));
-						continue;
-					}
-					catch (FormatException) { }
+				if (!reading_string && (c == '\n' || c == '\t' || c == '\r' || c == ' '))
+					continue;
 
-					//Bool
-					try
-					{
-						bool raw_value = bool.Parse(value);
-						values.Add(new JsonValue<bool>(raw_value));
-						continue;
-					}
-					catch (FormatException) { }
-                    
-                    //String
-                    if (value.StartsWith("\""))
-                    {
-                        string corrected_string = value.Substring(1).Substring(0, value.Length - 2);
-                        values.Add(new JsonValue<string>(corrected_string));
-                        continue;
-                    }
+				//Remove \ if \" appears in string
+				if (reading_string && last_char == '\\' && c == '"')
+					current_value = current_value.Substring(0, current_value.Length - 1) + c;
+				else
+					current_value += c;
 
-					//Unknown type, if here
-				}
-
-                if (c == '\r')
-                    continue;
-
-                if (c == '"')
-                    reading_string = !reading_string;
-
-                if (!reading_string && (c == '\n' || c == '\t' || c == '\r' || c == ' '))
-                    continue;
-
-                current_value += c;
+				last_char = c;
 			}
 		}
 
@@ -242,7 +249,7 @@ namespace VScript_Core.Graphing.Json
 				try
 				{
 					JsonValue<string> str_value = (JsonValue<string>)pair;
-					formatted_json += "\"" + str_value.raw_value + '"';
+					formatted_json += "\"" + JsonObject.Sanitise(str_value.raw_value) + '"';
 				}
 				catch (InvalidCastException e)
 				{
