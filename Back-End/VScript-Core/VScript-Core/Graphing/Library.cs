@@ -35,7 +35,9 @@ namespace VScript_Core.Graphing
 			//Null node
 			{
 				Node null_node = new Node("Null");
-				null_node.source = "pass";
+				null_node.id = 0;
+				null_node.module_id = 0;
+                null_node.source = "pass";
 				default_nodes.Add(0, null_node);
 			}
 
@@ -43,7 +45,8 @@ namespace VScript_Core.Graphing
             {
                 Node start_node = new Node("Start");
                 start_node.id = 1;
-                start_node.colour_r = 0.1f;
+				start_node.module_id = 0;
+				start_node.colour_r = 0.1f;
                 start_node.colour_g = 0.1f;
                 start_node.colour_b = 1.0f;
 
@@ -66,6 +69,7 @@ namespace VScript_Core.Graphing
 				Node node = new Node("Constant Value");
 				node.meta_value_key = "value";
                 node.id = 2;
+				node.module_id = 0;
                 node.colour_r = 1.0f;
                 node.colour_g = 0.7f;
                 node.colour_b = 0.2f;
@@ -119,6 +123,7 @@ namespace VScript_Core.Graphing
 			{
 				Node node = new Node(folder + "/" + node_name);
 				node.Import();
+				node.module_id = module.id;
 
 				if (nodes.ContainsKey(node.id))
 				{

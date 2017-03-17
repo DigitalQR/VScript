@@ -43,6 +43,14 @@ public class VScriptManager : MonoBehaviour {
         ConsoleOutput.Print("Closing VScriptEngine");
 	}
 
+	public void NewGraph(string name)
+	{
+		Graph graph = VScriptEngine.GetGraph(name);
+		graph.Clear();
+
+		OpenGraph(name);
+	}
+
 	public void OpenGraph(string name)
 	{
 		if (CurrentGraph != null)
@@ -120,6 +128,25 @@ public class VScriptManager : MonoBehaviour {
 			}
 		));
 		ExecutionThread.Start();
+	}
+
+	public NodeDescription AddNode(Node node)
+	{
+		if (CurrentGraph == null || CurrentGraphNodes == null)
+			return null;
+
+		GraphNode graph_node = CurrentGraph.AddNode(node.module_id, node.id);
+
+		NodeDescription new_node = Instantiate(NodeObject);
+		new_node.SetReferenceNode(graph_node);
+		CurrentGraphNodes.Add(graph_node.guid, new_node);
+
+		//Set location to middle of screen
+		Vector3 position = Camera.main.transform.position + new Vector3(0, 2.0f, 0);
+		position.z = 0;
+		new_node.transform.position = position;
+
+		return new_node;
     }
 
 	public NodeDescription GetNode(System.Guid guid)

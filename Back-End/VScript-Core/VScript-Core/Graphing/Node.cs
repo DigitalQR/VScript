@@ -41,6 +41,7 @@ namespace VScript_Core.Graphing
 		public string name;
 		public string source;
 		public int id;
+		public int module_id;
 
 		public float colour_r = 1;
 		public float colour_g = 1;
