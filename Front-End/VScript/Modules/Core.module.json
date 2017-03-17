@@ -5,6 +5,7 @@
 	"file_dep": [],
 	"nodes": ["Core/If",
 	"Core/If-Then",
+	"Core/While",
 	"Core/Print",
 	"Core/Input",
 	"Core/True",
