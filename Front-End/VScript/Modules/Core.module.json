@@ -10,5 +10,7 @@
 	"Core/True",
 	"Core/False",
 	"Core/Concatenate",
-	"Core/Constant Value"]
+	"Core/Constant Value",
+	"Core/Set Variable",
+	"Core/Get Variable"]
 }
