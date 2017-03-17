@@ -47,7 +47,7 @@ namespace VScript_Core.Graphing
 		public float colour_b = 1;
 
 		public string meta_value_key;
-		public bool uses_meta_key {	get { return meta_value_key != ""; } }
+		public bool uses_meta_key {	get { return meta_value_key != "" && meta_value_key != null; } }
 
 		public List<NodeIO> inputs;
 		public List<NodeIO> outputs;

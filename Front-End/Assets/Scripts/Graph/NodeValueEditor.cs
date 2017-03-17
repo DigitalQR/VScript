@@ -37,7 +37,7 @@ public class NodeValueEditor : MonoBehaviour
 
 		if (CurrentNode != null)
 		{
-			CurrentNode.ReferenceNode.meta_data.Put("value", input);
+			CurrentNode.ReferenceNode.meta_data.Put(CurrentNode.ActualNode.meta_value_key, input);
 			CurrentNode.Rebuild();
 			CurrentNode.Rewire();
 		}

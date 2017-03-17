@@ -61,8 +61,8 @@ public class NodeDescription : MonoBehaviour {
 		name = ActualNode.name;
 
         //Is const input node
-        if (ReferenceNode.module_id == 0 && ReferenceNode.node_id == 2)
-            DescriptionText.text = ReferenceNode.meta_data.Get<string>("value");
+        if (ActualNode.uses_meta_key)
+            DescriptionText.text = ReferenceNode.meta_data.Get<string>(ActualNode.meta_value_key);
         else
             DescriptionText.text = "";
 
@@ -140,6 +140,10 @@ public class NodeDescription : MonoBehaviour {
 			Inputs = new Dictionary<string, WireableSocket>();
 
 		int i = 0;
+
+		//Offset by 1 to give space for value
+		if (ActualNode.uses_meta_key)
+			i = 1;
 		
 		//Spawn new sockets
 		foreach (NodeIO input in inputs)
@@ -209,20 +213,14 @@ public class NodeDescription : MonoBehaviour {
 
 	private void CheckNodeSize()
 	{
-		int size = 1;
+		int input_size = Inputs != null ? Inputs.Count : 0;
+		int output_size = Outputs != null ? Outputs.Count : 0;
 
-		if (Inputs != null && Outputs != null)
-		{
-			if (Inputs.Count > Outputs.Count)
-				size = Inputs.Count;
-			else
-				size = Outputs.Count;
-		}
-		else if (Inputs != null)
-			size = Inputs.Count;
+		//Offset by 1 to give space for value
+		if (ActualNode.uses_meta_key)
+			input_size++;
 
-		else if (Outputs != null)
-			size = Outputs.Count;
+		int size = input_size > output_size ? input_size : output_size;
 		
 		ResizableBody.transform.localScale = new Vector2(
 			ResizableBody.transform.localScale.x,
@@ -237,7 +235,7 @@ public class NodeDescription : MonoBehaviour {
 
 	void OnMouseOver()
 	{
-		if (Input.GetMouseButtonDown(1) && ActualNode.use_value)
+		if (Input.GetMouseButtonDown(1) && ActualNode.uses_meta_key)
 			NodeValueEditor.main.Possess(this);
 	}
 }
