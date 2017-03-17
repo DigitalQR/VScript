@@ -3,7 +3,8 @@
 	"id": 1,
 	"module_dep": [],
 	"file_dep": [],
-	"nodes": ["Core/If",
+	"nodes": [
+	"Core/If",
 	"Core/If-Then",
 	"Core/While",
 	"Core/Print",
@@ -21,5 +22,10 @@
 	"Core/Greater Than Or Equal",
 	"Core/And",
 	"Core/Or",
-	"Core/Not"]
+	"Core/Not",
+	"Core/Cast",
+	"Core/Add",
+	"Core/Subtract",
+	"Core/Multiply",
+	"Core/Divide"]
 }
