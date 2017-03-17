@@ -1,0 +1,14 @@
+{
+	"name": "Core",
+	"id": 1,
+	"module_dep": [],
+	"file_dep": [],
+	"nodes": ["Core/If",
+	"Core/If-Then",
+	"Core/Print",
+	"Core/Input",
+	"Core/True",
+	"Core/False",
+	"Core/Concatenate",
+	"Core/Constant Value"]
+}

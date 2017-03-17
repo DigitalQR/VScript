@@ -1,0 +1,47 @@
+{
+	"name":"If",
+	"id":1,
+	"source":"
+	{ei:begin}
+	if {vi:condition}:
+		{eo:true}
+	else:
+		{eo:false}
+	",
+	"colour_r":1,
+	"colour_g":0,
+	"colour_b":0,
+	"inputs":[
+		{
+			"name":"begin",
+			"display_name": "",
+			"is_execution":True,
+			"colour_r":1,
+			"colour_g":1,
+			"colour_b":1,
+		},
+		{
+			"name":"condition",
+			"is_execution":False,
+			"colour_r":1,
+			"colour_g":0,
+			"colour_b":0,
+		}
+	],
+	"outputs":[
+		{
+			"name":"true",
+			"is_execution":True,
+			"colour_r":0,
+			"colour_g":1,
+			"colour_b":0,
+		},
+		{
+			"name":"false",
+			"is_execution":True,
+			"colour_r":1,
+			"colour_g":0,
+			"colour_b":0,
+		}
+	]
+}
