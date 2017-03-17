@@ -64,13 +64,13 @@ namespace VScript_Core.Graphing
 			//Const Value node
 			{
 				Node node = new Node("Constant Value");
-				node.use_value = true;
+				node.meta_value_key = "value";
                 node.id = 2;
                 node.colour_r = 1.0f;
                 node.colour_g = 0.7f;
                 node.colour_b = 0.2f;
 
-                node.source = "None{vo:end}";
+                node.source = "{ci:value}{vo:end}";
 
                 NodeIO output = new NodeIO();
                 output.name = "end";
@@ -134,14 +134,6 @@ namespace VScript_Core.Graphing
 
         public Node GetNode(GraphNode node_meta)
         {
-            //Const Input
-            if (node_meta.module_id == 0 && node_meta.node_id == 2)
-            {
-                Node node = GetNode(0, 2);
-                node.source = node_meta.meta_data.Get("value", "None") + "{vo:end}";
-                return node;
-            }
-
 			return GetNode(node_meta.module_id, node_meta.node_id);
         }
 

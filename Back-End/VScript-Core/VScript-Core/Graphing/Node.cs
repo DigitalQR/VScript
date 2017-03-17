@@ -45,7 +45,9 @@ namespace VScript_Core.Graphing
 		public float colour_r = 1;
 		public float colour_g = 1;
 		public float colour_b = 1;
-		public bool use_value; //Uses 'value' to store extra data in meta_data
+
+		public string meta_value_key;
+		public bool uses_meta_key {	get { return meta_value_key != ""; } }
 
 		public List<NodeIO> inputs;
 		public List<NodeIO> outputs;
@@ -90,7 +92,7 @@ namespace VScript_Core.Graphing
 				name = json.Get<string>("name");
 				id = json.Get<int>("id");
 				source = json.Get<string>("source");
-				use_value = json.Get<bool>("use_value");
+				meta_value_key = json.Get<string>("meta_value_key");
 
 				colour_r = json.Get<float>("colour_r", json.Get<int>("colour_r"));
 				colour_g = json.Get<float>("colour_g", json.Get<int>("colour_g"));
@@ -135,7 +137,7 @@ namespace VScript_Core.Graphing
 			JsonObject json = new JsonObject();
 			json.Put("name", name);
 			json.Put("id", id);
-			json.Put("use_value", use_value);
+			json.Put("meta_value_key", meta_value_key);
 			json.Put("source", source);
 
 			json.Put("colour_r", colour_r);

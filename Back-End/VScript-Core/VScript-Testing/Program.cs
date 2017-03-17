@@ -38,22 +38,16 @@ namespace VScript_Testing
 			GraphNode false_node = graph.AddNode(1, 6);
             GraphNode print_true = graph.AddNode(1, 3);
             GraphNode print_false = graph.AddNode(1, 3);
-            GraphNode input_node = graph.AddNode(1, 4);
-            GraphNode print_input = graph.AddNode(1, 3);
             GraphNode print_msg = graph.AddNode(1, 3);
 
             graph.AddConnection(true_node, "end", print_true, "message");
             graph.AddConnection(false_node, "end", print_false, "message");
-            graph.AddConnection(input_node, "end", print_input, "message");
             graph.AddConnection(const_msg, "end", print_msg, "message");
 
 
 			graph.AddConnection(graph.start_node, "end", print_true, "begin");
 			graph.AddConnection(print_true, "end", print_false, "begin");
-			graph.AddConnection(print_false, "end", print_input, "begin");
-			graph.AddConnection(print_input, "end", print_msg, "begin");
-			
-            graph.AddConnection(print_input, "end", print_msg, "begin");
+			graph.AddConnection(print_false, "end", print_msg, "begin");
 
 			//graph.AddConnection(if_then, "true", print_true, "begin");
 			//graph.AddConnection(if_then, "false", print_false, "begin");

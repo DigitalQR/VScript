@@ -20,7 +20,10 @@ namespace VScript_Core.Graphing
 			}
 		}
 
-		private enum IO_type { Exe, Var, Ref }
+		private enum TagType
+		{
+			Exe, Var, Ref, Const
+		}
         public string build_path = "Temp/Build/";
 
         private string Expand(GraphNode current_node)
@@ -47,7 +50,7 @@ namespace VScript_Core.Graphing
 					string current_io = "";
 					string io_name = "";
 					int io_read = 0;
-					IO_type io_type;
+					TagType tag_type = TagType.Exe;
 					bool is_input = true;
 
 					foreach (char c in line)
@@ -69,11 +72,13 @@ namespace VScript_Core.Graphing
 								//Check which type of io
 								case 1:
 									if (c == 'e')
-										io_type = IO_type.Exe;
+										tag_type = TagType.Exe;
 									else if (c == 'v')
-										io_type = IO_type.Var;
+										tag_type = TagType.Var;
 									else if (c == 'r')
-										io_type = IO_type.Ref;
+										tag_type = TagType.Ref;
+									else if (c == 'c')
+										tag_type = TagType.Const;
 									else //Invalid
 									{
 										real_line += current_io;
@@ -125,8 +130,12 @@ namespace VScript_Core.Graphing
 
 								if (is_input)
 								{
+									//Fetch value in meta_data keys
+									if(tag_type == TagType.Const)
+										real_line += current_node.meta_data.Get<string>(io_name);
+
 									//Don't bother fetching what's connected to begin
-									if (current_io != "{ei:begin}" && current_io != "{vi:begin}")
+									else if (current_io != "{ei:begin}" && current_io != "{vi:begin}")
 										new_source = Expand(current_node.GetInput(io_name));
 								}
 								else
