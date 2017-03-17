@@ -64,10 +64,11 @@ namespace VScript_Core.Graphing
 			//Const Value node
 			{
 				Node node = new Node("Const Value");
+				node.use_value = true;
                 node.id = 2;
                 node.colour_r = 1.0f;
-                node.colour_g = 1.0f;
-                node.colour_b = 0.0f;
+                node.colour_g = 0.7f;
+                node.colour_b = 0.2f;
 
                 node.source = "None{vo:end}";
 

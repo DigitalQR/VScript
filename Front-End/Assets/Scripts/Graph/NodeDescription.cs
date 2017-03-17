@@ -5,10 +5,11 @@ using UnityEngine;
 using VScript_Core.Graphing;
 
 public class NodeDescription : MonoBehaviour {
-	
-	public GraphNode ReferenceNode { get; private set; }
 
-    [SerializeField]
+	public GraphNode ReferenceNode { get; private set; }
+	public Node ActualNode { get; private set; }
+
+	[SerializeField]
     private TextMesh HeaderText;
     [SerializeField]
     private TextMesh DescriptionText;
@@ -56,8 +57,8 @@ public class NodeDescription : MonoBehaviour {
 
 	public void Rebuild()
 	{
-		Node node = Library.main.GetNode(ReferenceNode);
-		name = node.name;
+		ActualNode = Library.main.GetNode(ReferenceNode);
+		name = ActualNode.name;
 
         //Is const input node
         if (ReferenceNode.module_id == 0 && ReferenceNode.node_id == 2)
@@ -65,18 +66,18 @@ public class NodeDescription : MonoBehaviour {
         else
             DescriptionText.text = "";
 
-        HeaderText.text = node.name;
+        HeaderText.text = ActualNode.name;
 		HeaderText.color = Color.white;
 		
-		HeaderBar.color = new Color(node.colour_r, node.colour_g, node.colour_b);
+		HeaderBar.color = new Color(ActualNode.colour_r, ActualNode.colour_g, ActualNode.colour_b);
 
 		List<NodeIO> inputs_io = new List<NodeIO>();
-		foreach (NodeIO node_io in node.inputs)
+		foreach (NodeIO node_io in ActualNode.inputs)
 			inputs_io.Add(node_io);
 		SetInputs(inputs_io);
 
 		List<NodeIO> outputs_io = new List<NodeIO>();
-		foreach (NodeIO node_io in node.outputs)
+		foreach (NodeIO node_io in ActualNode.outputs)
 			outputs_io.Add(node_io);
 		SetOutputs(outputs_io);
 	}
@@ -232,5 +233,11 @@ public class NodeDescription : MonoBehaviour {
 			ResizableBody.transform.localPosition.x,
 			-(size + 1) * ConnectionSpacing * 0.5f
 			);
+	}
+
+	void OnMouseOver()
+	{
+		if (Input.GetMouseButtonDown(1) && ActualNode.use_value)
+			NodeValueEditor.main.Possess(this);
 	}
 }
