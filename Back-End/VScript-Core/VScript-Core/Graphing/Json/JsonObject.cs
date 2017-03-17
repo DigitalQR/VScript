@@ -22,6 +22,7 @@ namespace VScript_Core.Graphing.Json
 			int bracket_count = -1;
 			bool reading_key = true;
 			bool reading_string = false;
+			char last_char = '\0';
 
 			bool reading_sub_object = false;
 			bool reading_sub_array = false;
@@ -101,80 +102,107 @@ namespace VScript_Core.Graphing.Json
 						just_read_sub_struct = true;
 						continue;
 					}
-				}
 
 
-				//Switching between key and value
-				if (reading_key && c == ':')
-				{
-					current_key = current_key.Substring(1).Substring(0, current_key.Length - 2);
-					reading_key = false;
-					continue;
-				}
-
-				//Found key value pair
-				if (!reading_key && (c == ',' || bracket_count == -1))
-				{
-					string key = current_key;
-					string value = current_value;
-
-					reading_key = true;
-					current_key = "";
-					current_value = "";
-
-					//Attempt to find correct type
-					//Int
-					try
+					//Switching between key and value
+					if (reading_key && c == ':')
 					{
-						int raw_value = Int32.Parse(value);
-						Put(key, raw_value);
-						continue;
-					}
-					catch (FormatException) { }
-
-					//Double
-					try
-					{
-						double raw_value = double.Parse(value);
-						Put<float>(key, (float)raw_value);
-						continue;
-					}
-					catch (FormatException) { }
-
-					//Bool
-					try
-					{
-						bool raw_value = bool.Parse(value);
-						Put(key, raw_value);
-						continue;
-					}
-					catch (FormatException) { }
-
-					//String
-					if (value.StartsWith("\""))
-					{
-						string corrected_string = value.Substring(1).Substring(0, value.Length - 2);
-						Put(key, corrected_string);
+						current_key = current_key.Substring(1).Substring(0, current_key.Length - 2);
+						reading_key = false;
 						continue;
 					}
 
-					//Unknown type, if here
+					//Found key value pair
+					if (!reading_key && (c == ',' || bracket_count == -1))
+					{
+						string key = current_key;
+						string value = current_value;
+
+						reading_key = true;
+						current_key = "";
+						current_value = "";
+
+						//Attempt to find correct type
+						//Int
+						try
+						{
+							int raw_value = Int32.Parse(value);
+							Put(key, raw_value);
+							continue;
+						}
+						catch (FormatException) { }
+
+						//Double
+						try
+						{
+							double raw_value = double.Parse(value);
+							Put<float>(key, (float)raw_value);
+							continue;
+						}
+						catch (FormatException) { }
+
+						//Bool
+						try
+						{
+							bool raw_value = bool.Parse(value);
+							Put(key, raw_value);
+							continue;
+						}
+						catch (FormatException) { }
+
+						//String
+						if (value.StartsWith("\""))
+						{
+							string corrected_string = value.Substring(1).Substring(0, value.Length - 2);
+							Put(key, corrected_string);
+							continue;
+						}
+
+						//Unknown type, if here
+					}
 				}
 
 				if (c == '\r')
 					continue;
 
-				if (c == '"')
+				if (c == '"' && last_char != '\\')
 					reading_string = !reading_string;
 
 				if (!reading_string && (c == '\n' || c == '\t' || c == '\r' || c == ' '))
 					continue;
 
-				if (reading_key)
-					current_key += c;
+				//Remove \ if \" appears in string
+				if (reading_string && last_char == '\\' && c == '"')
+				{
+					if (reading_key)
+						current_key = current_key.Substring(0, current_key.Length - 1) + c;
+					else
+						current_value = current_value.Substring(0, current_value.Length - 1) + c;
+				}
 				else
-					current_value += c;
+				{
+					if (reading_key)
+						current_key += c;
+					else
+						current_value += c;
+				}
+
+				last_char = c;
+            }
+		}
+
+		public static string Sanitise(string value)
+		{
+			string clean_value = "";
+
+			foreach(char c in value)
+			{
+				if (c == '"')
+					clean_value += "\\\"";
+				else
+					clean_value += c;
 			}
+			return clean_value;
 		}
 
 		/**
@@ -187,6 +215,8 @@ namespace VScript_Core.Graphing.Json
 
 			foreach (KeyValuePair<string, JsonValue> pair in raw_values)
 			{
+				string clean_key = Sanitise(pair.Key);
+
 				if (first)
 					first = false;
 				else
@@ -194,19 +224,19 @@ namespace VScript_Core.Graphing.Json
 				
 				if(pair.Value == null)
 				{
-					formatted_json += '"' + pair.Key + "\":null";
+					formatted_json += '"' + clean_key + "\":null";
 					continue;
                 }
 
 				try
 				{
 					JsonValue<string> str_value = (JsonValue<string>)pair.Value;
-					formatted_json += '"' + pair.Key + "\":\"" + str_value.raw_value + '"';
+					formatted_json += '"' + clean_key + "\":\"" + Sanitise(str_value.raw_value) + '"';
 				}
 				catch (InvalidCastException e)
 				{
 					//Use default format
-					formatted_json += '"' + pair.Key + "\":" + pair.Value.ToString();
+					formatted_json += '"' + clean_key + "\":" + pair.Value.ToString();
 				}
 			}
 

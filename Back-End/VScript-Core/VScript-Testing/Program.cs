@@ -24,7 +24,7 @@ namespace VScript_Testing
 			VSLogger.error_print = Print;
 			
 
-            VScriptEngine.engine_directory = "../../VScript/";
+			VScriptEngine.engine_directory = "../../VScript/";
 			VScriptEngine.Init();
             Graph graph = VScriptEngine.GetGraph("Example");
             
