@@ -64,30 +64,6 @@ namespace VScript_Core.Graphing
                 default_nodes.Add(1, start_node);
             }
 
-			//Const Value node
-			{
-				Node node = new Node("Constant Value");
-				node.meta_value_key = "value";
-                node.id = 2;
-				node.module_id = 0;
-                node.colour_r = 1.0f;
-                node.colour_g = 0.7f;
-                node.colour_b = 0.2f;
-
-                node.source = "{ci:value}{vo:end}";
-
-                NodeIO output = new NodeIO();
-                output.name = "end";
-                output.display_name = "";
-				output.colour_r = 1.0f;
-				output.colour_g = 1.0f;
-				output.colour_b = 1.0f;
-				output.is_execution = false;
-
-                node.outputs.Add(output);
-                default_nodes.Add(2, node);
-            }
-
             module_nodes.Add(0, default_nodes);
         }
 
