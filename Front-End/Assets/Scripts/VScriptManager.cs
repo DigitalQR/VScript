@@ -61,7 +61,9 @@ public class VScriptManager : MonoBehaviour {
 			new_node.SetReferenceNode(pair.Value);
 			CurrentGraphNodes.Add(pair.Key, new_node);
         }
-	}
+
+        Camera.main.transform.position = new Vector3(0, 0, -8.26f);
+    }
 
 	public void SaveGraph()
 	{
