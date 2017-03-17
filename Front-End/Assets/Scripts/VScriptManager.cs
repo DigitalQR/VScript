@@ -50,6 +50,7 @@ public class VScriptManager : MonoBehaviour {
 	{
 		Graph graph = VScriptEngine.GetGraph(name);
 		graph.Clear();
+		graph.AddNode(0, 1);
 
 		OpenGraph(name);
 	}
@@ -134,12 +135,12 @@ public class VScriptManager : MonoBehaviour {
 		ExecutionThread.Start();
 	}
 
-	public NodeDescription AddNode(Node node)
+	public NodeDescription AddNode(int module_id, int node_id)
 	{
 		if (CurrentGraph == null || CurrentGraphNodes == null)
 			return null;
 
-		GraphNode graph_node = CurrentGraph.AddNode(node.module_id, node.id);
+		GraphNode graph_node = CurrentGraph.AddNode(module_id, node_id);
 
 		NodeDescription new_node = Instantiate(NodeObject);
 		new_node.SetReferenceNode(graph_node);
@@ -151,7 +152,17 @@ public class VScriptManager : MonoBehaviour {
 		new_node.transform.position = position;
 
 		return new_node;
-    }
+	}
+
+	public void RemoveNode(NodeDescription node)
+	{
+		if (CurrentGraph == null || CurrentGraphNodes == null || (node.ReferenceNode.module_id == 0 && node.ReferenceNode.node_id == 1))
+			return;
+
+		CurrentGraph.RemoveNode(node.ReferenceNode);
+		CurrentGraphNodes.Remove(node.ReferenceNode.guid);
+		Destroy(node.gameObject);
+	}
 
 	public NodeDescription GetNode(System.Guid guid)
 	{

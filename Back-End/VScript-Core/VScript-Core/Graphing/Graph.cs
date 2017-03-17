@@ -145,6 +145,15 @@ namespace VScript_Core.Graphing
 
         public void RemoveNode(GraphNode node)
         {
+			foreach (KeyValuePair<Guid, GraphNode> other_node in nodes)
+			{
+				foreach (KeyValuePair<string, Guid> connection in other_node.Value.inputs.Where(con => con.Value == node.guid).ToList())
+					other_node.Value.inputs.Remove(connection.Key);
+
+				foreach (KeyValuePair<string, Guid> connection in other_node.Value.outputs.Where(con => con.Value == node.guid).ToList())
+					other_node.Value.outputs.Remove(connection.Key);
+			}
+
             nodes.Remove(node.guid);
         }
 

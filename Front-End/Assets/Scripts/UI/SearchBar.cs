@@ -50,8 +50,8 @@ public class SearchBar : MonoBehaviour {
 			if (node.id == 0 && node.module_id == 0)
 				continue;
 			//Ignore start node
-			//if (node.id == 1 && node.module_id == 0)
-			//	continue;
+			if (node.id == 1 && node.module_id == 0)
+				continue;
 
 			SearchResult result = Instantiate(Result, SearchPanel.transform);
 			result.transform.localScale = new Vector3(1, 1, 1);

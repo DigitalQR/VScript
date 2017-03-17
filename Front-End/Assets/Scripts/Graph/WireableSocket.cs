@@ -30,7 +30,7 @@ public class WireableSocket : SocketDescription {
 		DrawWire();
     }
 
-	Vector3 GetBezierPosition(Vector3 start, Vector3 end, float t)
+	static Vector3 GetBezierPosition(Vector3 start, Vector3 end, float t)
 	{
 		Vector3 p0 = start;
 		Vector3 p1 = p0 + new Vector3(1, 0, 0);

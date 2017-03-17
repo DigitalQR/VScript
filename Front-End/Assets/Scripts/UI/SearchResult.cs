@@ -29,6 +29,6 @@ public class SearchResult : MonoBehaviour {
 
 	public void OnClicked()
 	{
-		VScriptManager.main.AddNode(ThisNode);
+		VScriptManager.main.AddNode(ThisNode.module_id, ThisNode.id);
 	}
 }

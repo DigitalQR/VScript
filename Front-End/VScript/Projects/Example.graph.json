@@ -1,1 +1,1 @@
-{"nodes":[]}
+{"nodes":[{"guid":"00000000-0000-0000-0000-000000000000","module_id":0,"node_id":1,"meta_data":{"transform_x":0,"transform_y":0,"transform_z":0},"inputs":[],"outputs":[{"name":"end","guid":"5c035c08-4b59-4302-b5cb-ede0bc1375ac"}]},{"guid":"5c035c08-4b59-4302-b5cb-ede0bc1375ac","module_id":1,"node_id":3,"meta_data":{"transform_x":5.72342,"transform_y":-0.06727767,"transform_z":0},"inputs":[{"name":"begin","guid":"00000000-0000-0000-0000-000000000000"}],"outputs":[]}]}
