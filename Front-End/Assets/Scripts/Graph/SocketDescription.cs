@@ -12,7 +12,7 @@ public class SocketDescription : MonoBehaviour {
 	{
 		Input, Output
 	}
-
+	
 	[SerializeField]
 	private TextMesh SocketName;
 	public Color SocketColour { get { return SocketSprite.color; } }
@@ -22,7 +22,7 @@ public class SocketDescription : MonoBehaviour {
 	[SerializeField]
 	private Sprite[] SocketTypes;
 	public SocketType TypeSocket { get; private set; }
-	public IOType TypeIO { get; private set; }
+	public IOType SocketIOType { get; private set; }
 
 
 	public void SetName(string name)
@@ -54,7 +54,7 @@ public class SocketDescription : MonoBehaviour {
 
 	public void SetIOType(IOType type)
 	{
-		TypeIO = type;
+		SocketIOType = type;
 
 		if(type == IOType.Input)
 			SocketName.anchor = TextAnchor.MiddleLeft;

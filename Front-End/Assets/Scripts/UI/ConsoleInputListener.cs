@@ -7,6 +7,7 @@ public class ConsoleInputListener : MonoBehaviour {
 
 	[SerializeField]
 	private InputField InputField;
+	private string next_input;
 
 	public void OnEndEdit()
 	{
@@ -16,11 +17,17 @@ public class ConsoleInputListener : MonoBehaviour {
 
 	void HandleInput(string input)
 	{
-		Debug.Log("Do something with input '" + input + "'");
-
-		//TESTING ONLY
-		ConsoleOutputListener output = FindObjectOfType<ConsoleOutputListener>();
-		output.Print(input);
-
+		next_input = input;
 	}
+
+	public void ClearInput()
+	{
+		next_input = "";
+    }
+	public string ReadInput()
+	{
+		string input = next_input;
+		next_input = "";
+        return input;
+    }
 }

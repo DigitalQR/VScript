@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(SocketDescription)), RequireComponent(typeof(LineRenderer))]
-public class WireableSocket : MonoBehaviour {
+[RequireComponent(typeof(LineRenderer))]
+public class WireableSocket : SocketDescription {
 
-	private SocketDescription Socket;
+	public NodeDescription ParentNode;
 	private LineRenderer LineRenderer;
 
 	private bool DraggingWire;
-	private WireableSocket ConnectedSocket;
+	public WireableSocket ConnectedSocket;
 
 	private static Vector2 GetMouseLocation()
 	{
@@ -19,8 +19,6 @@ public class WireableSocket : MonoBehaviour {
 
 	void Start ()
 	{
-		Socket = GetComponent<SocketDescription>();
-
 		LineRenderer = GetComponent<LineRenderer>();
 		LineRenderer.numPositions = 2;
 		LineRenderer.sortingOrder = 10;
@@ -28,23 +26,28 @@ public class WireableSocket : MonoBehaviour {
 	
 	void Update ()
 	{
+		DrawWire();
+    }
+
+	void DrawWire()
+	{
 		if (ConnectedSocket != null)
 		{
 			LineRenderer.enabled = true;
 			LineRenderer.SetPosition(0, transform.position);
 			LineRenderer.SetPosition(1, ConnectedSocket.transform.position);
 
-			LineRenderer.startColor = Socket.SocketColour;
-			LineRenderer.endColor = ConnectedSocket.Socket.SocketColour;
-		} 
+			LineRenderer.startColor = SocketColour;
+			LineRenderer.endColor = ConnectedSocket.SocketColour;
+		}
 		else if (DraggingWire)
 		{
 			LineRenderer.enabled = true;
 			LineRenderer.SetPosition(0, transform.position);
 			LineRenderer.SetPosition(1, GetMouseLocation());
 
-			LineRenderer.startColor = Socket.SocketColour;
-			LineRenderer.endColor = Socket.SocketColour;
+			LineRenderer.startColor = SocketColour;
+			LineRenderer.endColor = SocketColour;
 		}
 		else
 			LineRenderer.enabled = false;
@@ -55,12 +58,7 @@ public class WireableSocket : MonoBehaviour {
 		if (Input.GetMouseButtonDown(0))
 		{
 			DraggingWire = true;
-
-			if (ConnectedSocket != null)
-			{
-				ConnectedSocket.ConnectedSocket = null;
-				ConnectedSocket = null;
-			}
+			Detach();
 		}
 	}
 
@@ -76,15 +74,9 @@ public class WireableSocket : MonoBehaviour {
 				WireableSocket socket = collider.GetComponent<WireableSocket>();
 
 				//Check if socket is valid
-				if (socket != null && socket.transform.parent != transform.parent && Socket.TypeIO != socket.Socket.TypeIO && Socket.TypeSocket == socket.Socket.TypeSocket)
-				{
-					ConnectedSocket = socket;
+				if (socket != null && socket.transform.parent != transform.parent && SocketIOType != socket.SocketIOType && TypeSocket == socket.TypeSocket)
+					Attach(socket);
 
-					//Update connection on other ned
-					if (socket.ConnectedSocket != null && socket.ConnectedSocket.ConnectedSocket != null)
-						socket.ConnectedSocket.ConnectedSocket = null;
-					socket.ConnectedSocket = this;
-                }
 				else
 					LineRenderer.enabled = false;
 			}
@@ -92,4 +84,30 @@ public class WireableSocket : MonoBehaviour {
 				LineRenderer.enabled = false;
 		}
 	}
+
+	private void Attach(WireableSocket NewSocket)
+	{
+		NewSocket.Detach();
+		ConnectedSocket = NewSocket;
+		NewSocket.ConnectedSocket = this;
+
+		if (SocketIOType == IOType.Input)
+			VScriptManager.main.CurrentGraph.AddConnection(NewSocket.ParentNode.ReferenceNode, NewSocket.name, ParentNode.ReferenceNode, name);
+		else
+			VScriptManager.main.CurrentGraph.AddConnection(ParentNode.ReferenceNode, name, NewSocket.ParentNode.ReferenceNode, NewSocket.name);
+	}
+
+	private void Detach()
+	{
+		if (ConnectedSocket != null)
+		{
+			if (SocketIOType == IOType.Input)
+				VScriptManager.main.CurrentGraph.RemoveConnection(ConnectedSocket.ParentNode.ReferenceNode, ConnectedSocket.name, ParentNode.ReferenceNode, name);
+			else
+				VScriptManager.main.CurrentGraph.RemoveConnection(ParentNode.ReferenceNode, name, ConnectedSocket.ParentNode.ReferenceNode, ConnectedSocket.name);
+
+			ConnectedSocket.ConnectedSocket = null;
+			ConnectedSocket = null;
+        }
+    }
 }
