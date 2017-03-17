@@ -5,8 +5,8 @@
 	False{vo:end}
 	",
 	"colour_r": 1,
-	"colour_g": 0,
-	"colour_b": 0,
+	"colour_g": 0.3,
+	"colour_b": 0.4,
 	"inputs": [],
 	"outputs": [{
 		"name": "end",

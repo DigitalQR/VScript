@@ -11,6 +11,7 @@
 	"Core/Get Variable",
 	"Core/Constant Value",
 	"Core/Cast",
+	"Core/Concatenate",
 	
 	"Core/If",
 	"Core/If-Then",

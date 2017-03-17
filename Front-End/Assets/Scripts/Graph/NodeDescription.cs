@@ -11,12 +11,15 @@ public class NodeDescription : MonoBehaviour {
 
 	[SerializeField]
     private TextMesh HeaderText;
-    [SerializeField]
-    private TextMesh DescriptionText;
-    [SerializeField]
+	[SerializeField]
 	private SpriteRenderer HeaderBar;
 	[SerializeField]
 	private GameObject ResizableBody;
+
+	[SerializeField]
+	private TextMesh DescriptionText;
+	[SerializeField]
+	private SpriteRenderer EditableSprite;
 
 	[SerializeField]
 	private WireableSocket DefaultSocket;
@@ -60,11 +63,17 @@ public class NodeDescription : MonoBehaviour {
 		ActualNode = Library.main.GetNode(ReferenceNode);
 		name = ActualNode.name;
 
-        //Is const input node
-        if (ActualNode.uses_meta_key)
-            DescriptionText.text = ReferenceNode.meta_data.Get<string>(ActualNode.meta_value_key);
-        else
-            DescriptionText.text = "";
+		//Is const input node
+		if (ActualNode.uses_meta_key)
+		{
+			DescriptionText.text = ReferenceNode.meta_data.Get<string>(ActualNode.meta_value_key);
+			EditableSprite.enabled = true;
+		}
+		else
+		{
+			DescriptionText.text = "";
+			EditableSprite.enabled = false;
+        }
 
         HeaderText.text = ActualNode.name;
 		HeaderText.color = Color.white;
