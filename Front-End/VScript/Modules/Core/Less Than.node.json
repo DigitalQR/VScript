@@ -1,0 +1,35 @@
+{
+	"name": "A < B",
+	"id": 12,
+	"source": "
+	{vi:a} < {vi:b}{vo:end}
+	",
+	"colour_r": 1,
+	"colour_g": 0,
+	"colour_b": 0,
+	"inputs": [
+		{
+			"name":"a",
+			"is_execution":False,
+			"colour_r":0,
+			"colour_g":1,
+			"colour_b":0,
+		},
+		{
+			"name":"b",
+			"is_execution":False,
+			"colour_r":0,
+			"colour_g":1,
+			"colour_b":0,
+		}
+	],
+	"outputs": [{
+		"name": "end",
+		"display_name": "",
+		"is_execution": False,
+		"colour_r": 1,
+		"colour_g": 0,
+		"colour_b": 0,
+		
+	}]
+}

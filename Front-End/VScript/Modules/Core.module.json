@@ -12,5 +12,13 @@
 	"Core/Concatenate",
 	"Core/Constant Value",
 	"Core/Set Variable",
-	"Core/Get Variable"]
+	"Core/Get Variable",
+	"Core/Equal",
+	"Core/Less Than",
+	"Core/Less Than Or Equal",
+	"Core/Greater Than",
+	"Core/Greater Than Or Equal",
+	"Core/And",
+	"Core/Or",
+	"Core/Not"]
 }
