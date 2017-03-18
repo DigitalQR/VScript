@@ -370,6 +370,10 @@ Prefab:
       propertyPath: GraphSheild
       value: 
       objectReference: {fileID: 1704653462}
+    - target: {fileID: 1846918741805150, guid: c322231f8dd9fbb4ba0a6de8e4906f80, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c322231f8dd9fbb4ba0a6de8e4906f80, type: 2}
   m_IsPrefabParent: 0
@@ -790,7 +794,7 @@ Prefab:
     - target: {fileID: 224443496255917226, guid: cddb0d1f7d0be8b479df5906c5af722f,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 352.1001
+      value: 348.76672
       objectReference: {fileID: 0}
     - target: {fileID: 224937422067173336, guid: cddb0d1f7d0be8b479df5906c5af722f,
         type: 2}
