@@ -4,9 +4,9 @@
 	"source":"
 	True{vo:end}
 	",
-	"colour_r":0,
+	"colour_r":0.6,
 	"colour_g":1,
-	"colour_b":0,
+	"colour_b":0.3,
 	"inputs":[],
 	"outputs":[
 		{

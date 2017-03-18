@@ -1,0 +1,37 @@
+{
+	"name": "Set Variable",
+	"id": 9,
+	"meta_value_key": "variable",
+	"source": "
+	{ei:begin}{ci:variable} = {vi:value}
+	{eo:end}
+	",	
+	"colour_r": 1,
+	"colour_g": 0.7,
+	"colour_b": 0.2,
+	"inputs": [
+		{
+			"name":"begin",
+			"display_name": "",
+			"is_execution":True,
+			"colour_r":1,
+			"colour_g":1,
+			"colour_b":1,
+		},
+		{
+			"name":"value",
+			"is_execution":False,
+			"colour_r":0,
+			"colour_g":1,
+			"colour_b":0,
+		}
+	],
+	"outputs": [{
+		"name": "end",
+		"is_execution": True,
+		"display_name": "",
+		"colour_r": 1,
+		"colour_g": 1,
+		"colour_b": 1
+	}]
+}

@@ -1,0 +1,62 @@
+{
+	"name":"For",
+	"id":25,
+	"meta_value_key": "variable",
+	"source":"
+	{ei:begin}
+	for {ci:variable} in range({vi:start}, {vi:until}, {vi:step}):
+		{eo:do}
+	{eo:end}
+	",
+	"colour_r":1,
+	"colour_g":0,
+	"colour_b":0,
+	"inputs":[
+		{
+			"name":"begin",
+			"display_name": "",
+			"is_execution":True,
+			"colour_r":1,
+			"colour_g":1,
+			"colour_b":1,
+		},
+		{
+			"name":"start",
+			"is_execution":False,
+			"colour_r":0,
+			"colour_g":1,
+			"colour_b":0,
+		},
+		{
+			"name":"until",
+			"is_execution":False,
+			"colour_r":0,
+			"colour_g":1,
+			"colour_b":0,
+		},
+		{
+			"name":"step",
+			"is_execution":False,
+			"colour_r":0,
+			"colour_g":1,
+			"colour_b":0,
+		}
+	],
+	"outputs":[
+		{
+			"name":"do",
+			"is_execution":True,
+			"colour_r":1,
+			"colour_g":1,
+			"colour_b":0,
+		},
+		{
+			"name":"end",
+			"display_name":"then",
+			"is_execution":True,
+			"colour_r":1,
+			"colour_g":1,
+			"colour_b":1,
+		}
+	]
+}

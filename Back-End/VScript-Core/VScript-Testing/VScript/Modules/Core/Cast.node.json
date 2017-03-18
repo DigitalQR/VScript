@@ -1,0 +1,24 @@
+{
+	"name": "Cast",
+	"id": 20,
+	"meta_value_key": "type",
+	"source": "{ci:type}({vi:value}){vo:end}",
+	"colour_r": 1,
+	"colour_g": 0.7,
+	"colour_b": 0.2,
+	"inputs": [{
+		"name": "value",
+		"is_execution": False,
+		"colour_r": 0,
+		"colour_g": 1,
+		"colour_b": 0
+	}],
+	"outputs": [{
+		"name": "end",
+		"is_execution": False,
+		"display_name": "new value",
+		"colour_r": 0,
+		"colour_g": 1,
+		"colour_b": 0
+	}]
+}

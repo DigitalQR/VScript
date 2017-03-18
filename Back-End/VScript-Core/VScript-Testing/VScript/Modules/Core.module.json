@@ -3,12 +3,35 @@
 	"id": 1,
 	"module_dep": [],
 	"file_dep": [],
-	"nodes": ["Core/If",
-	"Core/If-Then",
+	"nodes": [
 	"Core/Print",
+	
 	"Core/Input",
+	"Core/Set Variable",
+	"Core/Get Variable",
+	"Core/Constant Value",
+	"Core/Cast",
+	"Core/Concatenate",
+	
+	"Core/If",
+	"Core/If-Then",
+	"Core/While",
+	"Core/For",
+	
+	"Core/Add",
+	"Core/Subtract",
+	"Core/Multiply",
+	"Core/Divide",
+	
 	"Core/True",
 	"Core/False",
-	"Core/Concatenate",
-	"Core/Constant Value"]
+	"Core/Equal",
+	"Core/Less Than",
+	"Core/Less Than Or Equal",
+	"Core/Greater Than",
+	"Core/Greater Than Or Equal",
+	"Core/And",
+	"Core/Or",
+	"Core/Not"
+	]
 }

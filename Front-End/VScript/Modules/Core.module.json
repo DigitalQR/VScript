@@ -16,6 +16,7 @@
 	"Core/If",
 	"Core/If-Then",
 	"Core/While",
+	"Core/For",
 	
 	"Core/Add",
 	"Core/Subtract",
