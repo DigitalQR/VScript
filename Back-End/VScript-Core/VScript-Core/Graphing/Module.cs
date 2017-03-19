@@ -36,7 +36,7 @@ namespace VScript_Core.Graphing
 			File.WriteAllText(name + extention, ToString());
 		}
 
-		public void Import()
+		public bool Import()
 		{
 			try
 			{
@@ -50,10 +50,17 @@ namespace VScript_Core.Graphing
 				module_dep = json.GetList<int>("module_dep");
 				file_dep = json.GetList<string>("file_dep");
 				nodes = json.GetList<string>("nodes");
+				return true;
+			}
+			catch (DirectoryNotFoundException)
+			{
+				VSLogger.LogError("Unable to import '" + name + extention + "'");
+				return false;
 			}
 			catch (FileNotFoundException)
 			{
 				VSLogger.LogError("Unable to import '" + name + extention + "'");
+				return false;
 			}
 		}
 

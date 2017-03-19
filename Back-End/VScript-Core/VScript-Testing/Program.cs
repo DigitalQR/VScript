@@ -27,7 +27,7 @@ namespace VScript_Testing
 			VScriptEngine.input_function = delegate () { return Encoding.ASCII.GetBytes("Test"); };
             VScriptEngine.engine_directory = "../../VScript/";
 			VScriptEngine.Init();
-            Graph graph = VScriptEngine.GetGraph("Example");    
+            Graph graph = VScriptEngine.OpenGraph("Example");
 			/*       
             graph.Clear();
             graph.AddNode(0, 1);
@@ -54,11 +54,10 @@ namespace VScript_Testing
 			//graph.AddConnection(if_then, "false", print_false, "begin");
 
 
+			VScriptEngine.SaveOpenGraphs();
+			//VScriptEngine.CompileAndRun(graph);
 
-			VScriptEngine.SaveAll();
-			VScriptEngine.CompileAndRun(graph);
-
-            VSLogger.Log("Done");
+			VSLogger.Log("Done");
 			Console.ReadLine();
 		}
 	}

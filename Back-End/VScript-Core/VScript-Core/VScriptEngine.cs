@@ -10,6 +10,7 @@ using VScript_Core.System;
 using System.Diagnostics;
 using System.ComponentModel;
 
+
 namespace VScript_Core
 {
     public class VScriptEngine
@@ -51,29 +52,47 @@ namespace VScript_Core
 			VSLogger.Log("VScriptEngine initialised");
 		}
 
-        public static Graph GetGraph(string name)
-        {
+		public static Graph NewGraph(string name)
+		{
+			if (!initialised)
+			{
+				VSLogger.LogError("VScriptEngine not initialised");
+				return null;
+			}
+			
+			Graph graph = new Graph(name);
+			VSLogger.Log("New graph '" + name + "'");
+
+			loaded_graphs[name] = graph;
+			return graph;
+		}
+
+		public static Graph OpenGraph(string name)
+		{
 			if (!initialised)
 			{
 				VSLogger.LogError("VScriptEngine not initialised");
 				return null;
 			}
 
-            if (loaded_graphs.ContainsKey(name))
-                return loaded_graphs[name];
+			if (loaded_graphs.ContainsKey(name))
+				return loaded_graphs[name];
 
-            Graph graph = new Graph(name);
+			Graph graph = new Graph(name);
 
-            if (graph.Import(engine_directory + project_directory + "/"))
-                VSLogger.Log("Loaded graph '" + name + "'");
-            else
-                VSLogger.Log("New graph '" + name + "'");
+			if (graph.Import(engine_directory + project_directory + "/"))
+			{
+				VSLogger.Log("Loaded graph '" + name + "'");
+				return graph;
+			}
+			else
+			{
+				VSLogger.LogError("Failed to open graph '" + name + "'");
+				return null;
+			}
+		}
 
-            loaded_graphs.Add(name, graph);
-            return graph;
-        }
-
-        public static void SaveAll()
+		public static void CloseGraph(string name, bool save = true)
 		{
 			if (!initialised)
 			{
@@ -81,8 +100,31 @@ namespace VScript_Core
 				return;
 			}
 
-			SaveSettings();
+			if (loaded_graphs.ContainsKey(name))
+			{
+                if (save)
+				{
+					loaded_graphs[name].Export(engine_directory + project_directory + "/");
+					VSLogger.Log("Saved graph '" + name + "'");
+				}
 
+				loaded_graphs.Remove(name);
+				VSLogger.Log("Closed graph '" + name + "'");
+			}
+			else
+			{
+				VSLogger.LogError("Cannot close graph '" + name + "' as it is not open");
+			}
+		}
+		
+		public static void SaveOpenGraphs()
+		{
+			if (!initialised)
+			{
+				VSLogger.LogError("VScriptEngine not initialised");
+				return;
+			}
+			
 			foreach (KeyValuePair<string, Graph> g in loaded_graphs)
             {
                 g.Value.Export(engine_directory + project_directory + "/");
