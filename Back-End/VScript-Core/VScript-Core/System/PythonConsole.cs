@@ -15,27 +15,33 @@ namespace VScript_Core.System
     {        
         public static String exe_path = "C:/Python34/python.exe";
         public delegate byte[] ReadInput();
+		public static Process CurrentProcess { get; private set; }
+		public static bool Running { get { return CurrentProcess != null && !CurrentProcess.HasExited; } }
+		private static bool Aborting = false;
 
-        public static Process CompileAndRun(Graph graph, ReadInput input_function)
+		public static void RunGraph(string graph_path, ReadInput input_function)
         {
-            string graph_path = Compiler.main.Compile(graph);
-            Process process = FetchNewProcess(graph_path);
+			if (CurrentProcess != null && !CurrentProcess.HasExited)
+				CurrentProcess.Kill();
 
-            if (input_function != null)
-                process.StartInfo.RedirectStandardInput = true;
+			CurrentProcess = FetchNewProcess(graph_path);
+			Aborting = false;
+
+			if (input_function != null)
+				CurrentProcess.StartInfo.RedirectStandardInput = true;
 
             try
             {
-                //Start process and asynchronous reading
-                process.Start();
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
+				//Start process and asynchronous reading
+				CurrentProcess.Start();
+				CurrentProcess.BeginOutputReadLine();
+				CurrentProcess.BeginErrorReadLine();
 				
 				if (input_function != null)
 				{
-					using (StreamWriter writer = new StreamWriter(process.StandardInput.BaseStream, Encoding.ASCII))
+					using (StreamWriter writer = new StreamWriter(CurrentProcess.StandardInput.BaseStream, Encoding.ASCII))
 					{
-						while (!process.HasExited)
+						while (!CurrentProcess.HasExited && !Aborting)
 						{
 							byte[] input = input_function();
 
@@ -46,13 +52,23 @@ namespace VScript_Core.System
 						}
 					}
 				}
+
+				if (Aborting && !CurrentProcess.HasExited)
+				{
+					CurrentProcess.Kill();
+					CurrentProcess.WaitForExit();
+					VSLogger.Log("Aborted current process.");
+
+				}
             }
             catch (Win32Exception exception)
             {
                 VSLogger.LogError("Output:\n" + exception.ToString());
             }
 
-            return process;
+			CurrentProcess.WaitForExit();
+			CurrentProcess = null;
+			Aborting = false;
         }
 
         private static Process FetchNewProcess(string graph_path, string args = "")
@@ -62,7 +78,7 @@ namespace VScript_Core.System
             process.StartInfo.WorkingDirectory = VScriptEngine.executable_directory;
             Directory.CreateDirectory(VScriptEngine.executable_directory);
 
-            process.StartInfo.Arguments = Directory.GetCurrentDirectory() + "/" + graph_path + " " + args;
+            process.StartInfo.Arguments = "\"" + Directory.GetCurrentDirectory() + "/" + graph_path + "\" " + args;
             process.StartInfo.CreateNoWindow = true;
 
             process.StartInfo.UseShellExecute = false;
@@ -91,5 +107,20 @@ namespace VScript_Core.System
 
             return process;
         }
-    }
+
+		public static bool AbortCurrentProcess()
+		{
+			if (Aborting)
+				return true;
+
+			if (!Running)
+			{
+				VSLogger.LogError("Cannot abort process, as none is active");
+				return false;
+			}
+			
+			Aborting = true;
+            return true;
+		}
+	}
 }

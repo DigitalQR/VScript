@@ -208,12 +208,16 @@ namespace VScript_Core.Graphing
                 }
 
                 return true;
-            }
+			}
+			catch (DirectoryNotFoundException)
+			{
+				return false;
+			}
 			catch (FileNotFoundException)
 			{
-                return false;
+				return false;
 			}
-			
+
 		}
 
 		public override string ToString()

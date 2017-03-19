@@ -83,7 +83,7 @@ namespace VScript_Core.Graphing
 			File.WriteAllText(name + extention, ToString());
 		}
 
-		public void Import()
+		public bool Import()
 		{
 			try
 			{
@@ -126,10 +126,17 @@ namespace VScript_Core.Graphing
 
 					outputs.Add(output);
 				}
+				return true;
+			}
+			catch (DirectoryNotFoundException)
+			{
+				VSLogger.LogError("Unable to import '" + name + extention + "'");
+				return false;
 			}
 			catch (FileNotFoundException)
 			{
 				VSLogger.LogError("Unable to import '" + name + extention + "'");
+				return false;
 			}
 		}
 
