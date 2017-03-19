@@ -142,9 +142,9 @@ namespace VScript_Core
 
 			try
 			{
+				string graph_path = Compiler.main.Compile(graph);
 				VSLogger.Log("===Executing '" + graph.display_name + "'===");
-				Process process = PythonConsole.CompileAndRun(graph, input_function);
-				process.WaitForExit();
+				PythonConsole.RunGraph(graph_path, input_function);
 				VSLogger.Log("===Finished execution===");
 				return true;
 			}

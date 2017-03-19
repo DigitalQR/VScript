@@ -185,13 +185,13 @@ namespace VScript_Core.Graphing
 		public string Compile(Graph graph)
         {
             string graph_path = build_path + graph.display_name + ".py";
-            VSLogger.DebugLog("Starting Compile '" + graph_path + "'");
+            VSLogger.Log("Starting Compile '" + graph_path + "'");
 
             Directory.CreateDirectory(build_path);
             string source = Expand(graph.start_node);
             File.WriteAllText(graph_path, source);
             VSLogger.DebugLog("\n==Source-start==\n" + source + "\n===Source-end===");
-            VSLogger.DebugLog("Finished Compile!");
+            VSLogger.Log("Finished Compile!");
 			return graph_path;
 		}
 	}

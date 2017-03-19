@@ -15,27 +15,31 @@ namespace VScript_Core.System
     {        
         public static String exe_path = "C:/Python34/python.exe";
         public delegate byte[] ReadInput();
+		public static Process CurrentProcess { get; private set; }
+		public static bool Running { get { return CurrentProcess != null && !CurrentProcess.HasExited; } }
 
-        public static Process CompileAndRun(Graph graph, ReadInput input_function)
+		public static void RunGraph(string graph_path, ReadInput input_function)
         {
-            string graph_path = Compiler.main.Compile(graph);
-            Process process = FetchNewProcess(graph_path);
+			if (Running)
+				AbortCurrentProcess();
+
+			CurrentProcess = FetchNewProcess(graph_path);
 
             if (input_function != null)
-                process.StartInfo.RedirectStandardInput = true;
+				CurrentProcess.StartInfo.RedirectStandardInput = true;
 
             try
             {
-                //Start process and asynchronous reading
-                process.Start();
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
+				//Start process and asynchronous reading
+				CurrentProcess.Start();
+				CurrentProcess.BeginOutputReadLine();
+				CurrentProcess.BeginErrorReadLine();
 				
 				if (input_function != null)
 				{
-					using (StreamWriter writer = new StreamWriter(process.StandardInput.BaseStream, Encoding.ASCII))
+					using (StreamWriter writer = new StreamWriter(CurrentProcess.StandardInput.BaseStream, Encoding.ASCII))
 					{
-						while (!process.HasExited)
+						while (!CurrentProcess.HasExited)
 						{
 							byte[] input = input_function();
 
@@ -52,7 +56,9 @@ namespace VScript_Core.System
                 VSLogger.LogError("Output:\n" + exception.ToString());
             }
 
-            return process;
+			if(!CurrentProcess.HasExited)
+				CurrentProcess.Kill();
+			CurrentProcess = null;
         }
 
         private static Process FetchNewProcess(string graph_path, string args = "")
@@ -62,7 +68,7 @@ namespace VScript_Core.System
             process.StartInfo.WorkingDirectory = VScriptEngine.executable_directory;
             Directory.CreateDirectory(VScriptEngine.executable_directory);
 
-            process.StartInfo.Arguments = Directory.GetCurrentDirectory() + "/" + graph_path + " " + args;
+            process.StartInfo.Arguments = "\"" + Directory.GetCurrentDirectory() + "/" + graph_path + "\" " + args;
             process.StartInfo.CreateNoWindow = true;
 
             process.StartInfo.UseShellExecute = false;
@@ -91,5 +97,19 @@ namespace VScript_Core.System
 
             return process;
         }
-    }
+
+		public static bool AbortCurrentProcess()
+		{
+			if (!Running)
+			{
+				VSLogger.LogError("Cannot abort process, as none is active");
+				return false;
+			}
+
+			CurrentProcess.Kill();
+			CurrentProcess = null;
+			VSLogger.Log("Aborted current process");
+			return true;
+		}
+	}
 }
