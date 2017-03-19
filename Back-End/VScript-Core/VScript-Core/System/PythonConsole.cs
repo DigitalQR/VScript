@@ -17,15 +17,17 @@ namespace VScript_Core.System
         public delegate byte[] ReadInput();
 		public static Process CurrentProcess { get; private set; }
 		public static bool Running { get { return CurrentProcess != null && !CurrentProcess.HasExited; } }
+		private static bool Aborting = false;
 
 		public static void RunGraph(string graph_path, ReadInput input_function)
         {
-			if (Running)
-				AbortCurrentProcess();
+			if (CurrentProcess != null && !CurrentProcess.HasExited)
+				CurrentProcess.Kill();
 
 			CurrentProcess = FetchNewProcess(graph_path);
+			Aborting = false;
 
-            if (input_function != null)
+			if (input_function != null)
 				CurrentProcess.StartInfo.RedirectStandardInput = true;
 
             try
@@ -39,7 +41,7 @@ namespace VScript_Core.System
 				{
 					using (StreamWriter writer = new StreamWriter(CurrentProcess.StandardInput.BaseStream, Encoding.ASCII))
 					{
-						while (!CurrentProcess.HasExited)
+						while (!CurrentProcess.HasExited && !Aborting)
 						{
 							byte[] input = input_function();
 
@@ -50,15 +52,23 @@ namespace VScript_Core.System
 						}
 					}
 				}
+
+				if (Aborting && !CurrentProcess.HasExited)
+				{
+					CurrentProcess.Kill();
+					CurrentProcess.WaitForExit();
+					VSLogger.Log("Aborted current process.");
+
+				}
             }
             catch (Win32Exception exception)
             {
                 VSLogger.LogError("Output:\n" + exception.ToString());
             }
 
-			if(!CurrentProcess.HasExited)
-				CurrentProcess.Kill();
+			CurrentProcess.WaitForExit();
 			CurrentProcess = null;
+			Aborting = false;
         }
 
         private static Process FetchNewProcess(string graph_path, string args = "")
@@ -100,16 +110,17 @@ namespace VScript_Core.System
 
 		public static bool AbortCurrentProcess()
 		{
+			if (Aborting)
+				return true;
+
 			if (!Running)
 			{
 				VSLogger.LogError("Cannot abort process, as none is active");
 				return false;
 			}
-
-			CurrentProcess.Kill();
-			CurrentProcess = null;
-			VSLogger.Log("Aborted current process");
-			return true;
+			
+			Aborting = true;
+            return true;
 		}
 	}
 }

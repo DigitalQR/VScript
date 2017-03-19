@@ -5,6 +5,7 @@ using UnityEngine;
 
 using VScript_Core;
 using VScript_Core.Graphing;
+using VScript_Core.System;
 
 public class VScriptManager : MonoBehaviour {
 
@@ -43,15 +44,11 @@ public class VScriptManager : MonoBehaviour {
 
 	void OnDestroy()
 	{
-        ConsoleOutput.Print("Closing VScriptEngine");
 	}
 
 	public void NewGraph(string name)
 	{
-		Graph graph = VScriptEngine.GetGraph(name);
-		graph.Clear();
-		graph.AddNode(0, 1);
-
+		Graph graph = VScriptEngine.NewGraph(name);
 		OpenGraph(name);
 	}
 
@@ -64,7 +61,10 @@ public class VScriptManager : MonoBehaviour {
 			CurrentGraphNodes = new Dictionary<System.Guid, NodeDescription>();
 
 
-		CurrentGraph = VScriptEngine.GetGraph(name);
+		CurrentGraph = VScriptEngine.OpenGraph(name);
+
+		if (CurrentGraph == null)
+			return;
 
 		Vector2 desired_position = new Vector2();
 
@@ -91,14 +91,15 @@ public class VScriptManager : MonoBehaviour {
 		foreach (KeyValuePair<System.Guid, NodeDescription> node in CurrentGraphNodes)
 			node.Value.PreSave();
 
-		VScriptEngine.SaveAll();
+		VScriptEngine.SaveOpenGraphs();
 	}
 
 	public void CloseGraph()
 	{
 		if (CurrentGraph == null || CurrentGraphNodes == null)
 			return;
-		SaveGraph();
+
+		VScriptEngine.CloseGraph(CurrentGraph.display_name, false);
 
 		foreach (KeyValuePair<System.Guid, NodeDescription> node in CurrentGraphNodes)
 			Destroy(node.Value.gameObject);
@@ -111,6 +112,7 @@ public class VScriptManager : MonoBehaviour {
 			ExecutionThread = null;
         }
 		GraphSheild.SetActive(true);
+		CurrentGraph = null;
     }
 
 	public void ExecuteGraph()
@@ -134,6 +136,14 @@ public class VScriptManager : MonoBehaviour {
 		));
 		ExecutionThread.Start();
 	}
+
+	public void AbortExecution()
+	{
+		if (CurrentGraph == null || CurrentGraphNodes == null)
+			return;
+
+		PythonConsole.AbortCurrentProcess();
+    }
 
 	public NodeDescription AddNode(int module_id, int node_id)
 	{

@@ -83,6 +83,7 @@ namespace VScript_Core
 			if (graph.Import(engine_directory + project_directory + "/"))
 			{
 				VSLogger.Log("Loaded graph '" + name + "'");
+				loaded_graphs[name] = graph;
 				return graph;
 			}
 			else
