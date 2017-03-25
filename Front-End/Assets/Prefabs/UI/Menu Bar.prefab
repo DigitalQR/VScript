@@ -387,6 +387,7 @@ GameObject:
   - component: {fileID: 222331253720682492}
   - component: {fileID: 114106875793529402}
   - component: {fileID: 114271665272316542}
+  - component: {fileID: 114455165063906352}
   m_Layer: 5
   m_Name: Menu Bar
   m_TagString: Untagged
@@ -1822,8 +1823,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: SaveGraph
+      - m_Target: {fileID: 114455165063906352}
+        m_MethodName: Save
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1948,9 +1949,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: NewGraph
-        m_Mode: 5
+      - m_Target: {fileID: 114455165063906352}
+        m_MethodName: New
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2466,8 +2467,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: CloseGraph
+      - m_Target: {fileID: 114455165063906352}
+        m_MethodName: Close
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2479,6 +2480,17 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114455165063906352
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1512929970183586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1ff7ed251a00d5418c401ffb4c7fe14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114463450352506722
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2783,9 +2795,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: OpenGraph
-        m_Mode: 5
+      - m_Target: {fileID: 114455165063906352}
+        m_MethodName: Open
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
