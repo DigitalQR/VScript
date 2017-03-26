@@ -8,6 +8,7 @@ using VScript_Core;
 
 
 public delegate void GraphOperation(string GraphName);
+public delegate void ConfirmOperation();
 
 
 public class GraphSelectDialog : MonoBehaviour {

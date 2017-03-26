@@ -9,7 +9,8 @@ public class AreYouSureDialog : MonoBehaviour {
 	public static AreYouSureDialog main { get; private set; }
 
 	[SerializeField]
-	private Text description;
+	private Text Description;
+	private ConfirmOperation CurrentOperation;
 
 	void Start ()
 	{
@@ -19,5 +20,30 @@ public class AreYouSureDialog : MonoBehaviour {
 
 	public void OnInput(bool accepts)
 	{
+		if (!accepts)
+		{
+			Close();
+			return; 
+		}
+
+		CurrentOperation();
+		CurrentOperation = null;
+		Close();
+	}
+
+	public void Open(string message, ConfirmOperation operation)
+	{
+		if (operation == null)
+			return;
+
+		Description.text = message;
+		CurrentOperation = operation;
+		gameObject.SetActive(true);
+	}
+
+	public void Close()
+	{
+		gameObject.SetActive(false);
+		CurrentOperation = null;
 	}
 }
