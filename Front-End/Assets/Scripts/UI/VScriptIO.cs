@@ -8,14 +8,6 @@ using VScript_Core;
 public class VScriptIO : MonoBehaviour {
 
 
-	void Start ()
-	{	
-	}
-	
-	void Update ()
-	{	
-	}
-
 	private bool DoesGraphExist(string name)
 	{
 		string[] files = Directory.GetFiles(VScriptEngine.engine_directory + VScriptEngine.project_directory + "/");
@@ -42,6 +34,8 @@ public class VScriptIO : MonoBehaviour {
 						}
 					);
 				}
+				else
+					VScriptManager.main.NewGraph(name);
 			}
 		);
 	}

@@ -35,7 +35,7 @@ public class CameraController : MonoBehaviour {
 
     void UpdateCameraZoom()
     {
-        zoom -= Input.GetAxis("Mouse ScrollWheel") * 2.0f;
+        zoom -= Input.GetAxis("Mouse ScrollWheel") * 5.0f;
 
         if (zoom < 4.16f)
             zoom = 4.16f;
