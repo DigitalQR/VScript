@@ -11,46 +11,17 @@ public class BackgroundScrolling : MonoBehaviour {
 	void Start ()
 	{
 		Clamping = Tile.transform.localScale;
+		const int half_size = 2;
 
-		//Create new (inactive) parts where 0 is the main controller
-		for (int i = 0; i < 9; i++) 
-		{
-			GameObject part = Instantiate(Tile);
-			part.transform.parent = transform;
-
-			switch (i)
+		//Create a box
+		for (int x = -half_size; x <= half_size; x++)
+			for (int y = -half_size; y <= half_size; y++)
 			{
-				case 0:
-					part.transform.localPosition = new Vector3(0, 0, 0);
-					break;
-				case 1:
-					part.transform.localPosition = new Vector3(0, Clamping.y, 0);
-					break;
-				case 2:
-					part.transform.localPosition = new Vector3(Clamping.x, Clamping.y, 0);
-					break;
-				case 3:
-					part.transform.localPosition = new Vector3(Clamping.x, 0, 0);
-					break;
+				GameObject part = Instantiate(Tile);
+				part.transform.parent = transform;
+				part.transform.localPosition = new Vector3(Clamping.x * x, Clamping.y * y, 0);
 
-				case 4:
-					part.transform.localPosition = new Vector3(Clamping.x * 2, 0, 0);
-					break;
-				case 5:
-					part.transform.localPosition = new Vector3(Clamping.x * 2, Clamping.y, 0);
-					break;
-				case 6:
-					part.transform.localPosition = new Vector3(Clamping.x * 2, Clamping.y * 2, 0);
-					break;
-				case 7:
-					part.transform.localPosition = new Vector3(Clamping.x, Clamping.y * 2, 0);
-					break;
-				case 8:
-					part.transform.localPosition = new Vector3(0, Clamping.y * 2, 0);
-					break;
-			};
-		}
-		
+			}
 	}
 
 	private Vector3 Clamp(Vector3 location)
