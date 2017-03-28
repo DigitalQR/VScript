@@ -193,4 +193,7 @@ public class VScriptManager : MonoBehaviour {
 	{
 		ConsoleOutput.Print("[ERROR] " + message);
 	}
+	public void Exit(){
+		Application.Quit ();
+	}
 }
